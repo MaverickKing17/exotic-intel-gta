@@ -9,35 +9,45 @@ interface CarCardProps {
   exchangeRate: number;
   onAction: (car: Car) => void;
   onChat: (car: Car) => void;
+  onFilterSelect?: (filter: string) => void;
 }
 
-export const CarCard: React.FC<CarCardProps> = ({ car, exchangeRate, onAction, onChat }) => {
+export const CarCard: React.FC<CarCardProps> = ({ car, exchangeRate, onAction, onChat, onFilterSelect }) => {
   const profit = calculateProfit(car, exchangeRate);
 
   return (
     <div className="glass-card rounded-2xl overflow-hidden group transition-all duration-500 hover:translate-y-[-4px] hover:shadow-2xl hover:shadow-black/50">
       {/* Image Section */}
-      <div className="relative h-56 overflow-hidden">
+      <div className="relative h-56 overflow-hidden bg-slate-800">
         <img 
           src={car.image} 
           alt={`${car.year} ${car.make} ${car.model}`}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=800";
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 to-transparent" />
         
         {/* Badges */}
         <div className="absolute top-4 left-4 flex gap-2">
           {profit.isHighYield && (
-            <div className="flex items-center gap-1 bg-amber-400 text-black text-[10px] font-bold px-2 py-1 rounded-full animate-pulse-gold">
+            <button 
+              onClick={(e) => { e.stopPropagation(); onFilterSelect?.('HIGH_YIELD'); }}
+              className="flex items-center gap-1 bg-amber-400 text-black text-[10px] font-bold px-2 py-1 rounded-full animate-pulse-gold hover:brightness-110 transition-all cursor-pointer"
+            >
               <Zap size={12} fill="currentColor" />
               HIGH-YIELD DEAL
-            </div>
+            </button>
           )}
           {car.isNorthAmerican && (
-            <div className="flex items-center gap-1 bg-blue-500/80 text-white text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-sm">
+            <button 
+              onClick={(e) => { e.stopPropagation(); onFilterSelect?.('NAFTA'); }}
+              className="flex items-center gap-1 bg-blue-500 text-white text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-sm hover:bg-blue-400 transition-all cursor-pointer"
+            >
               <ShieldCheck size={12} />
               NAFTA ELIGIBLE
-            </div>
+            </button>
           )}
         </div>
 
@@ -47,7 +57,7 @@ export const CarCard: React.FC<CarCardProps> = ({ car, exchangeRate, onAction, o
             <p className="text-gray-400 text-sm">{car.year} • Toronto, ON</p>
           </div>
           <div className="text-right">
-            <p className="text-gray-500 text-[10px] uppercase font-bold">List Price (CAD)</p>
+            <p className="text-gray-400 text-[10px] uppercase font-bold">List Price (CAD)</p>
             <p className="text-white font-mono">{formatCurrency(car.cadPrice, 'CAD')}</p>
           </div>
         </div>
@@ -101,13 +111,13 @@ export const CarCard: React.FC<CarCardProps> = ({ car, exchangeRate, onAction, o
         <div className="flex gap-2">
           <button 
             onClick={() => onAction(car)}
-            className="flex-1 bg-white text-black font-bold py-3 rounded-xl transition-all hover:bg-amber-400 active:scale-95 text-sm uppercase tracking-widest"
+            className="flex-1 bg-white text-black font-bold py-3 rounded-xl transition-all hover:bg-amber-400 active:scale-95 text-sm uppercase tracking-widest cursor-pointer"
           >
             Start Deal
           </button>
           <button 
             onClick={() => onChat(car)}
-            className="w-12 h-12 flex items-center justify-center bg-slate-800 text-white rounded-xl transition-all hover:bg-slate-700 active:scale-95 border border-white/10"
+            className="w-12 h-12 flex items-center justify-center bg-slate-800 text-white rounded-xl transition-all hover:bg-slate-700 active:scale-95 border border-white/10 cursor-pointer"
             title="AI Assistant"
           >
             <Zap size={20} className="text-amber-400" />

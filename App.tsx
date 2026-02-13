@@ -60,19 +60,25 @@ const App: React.FC = () => {
     e.preventDefault();
     if (section === 'INVENTORY') {
       setActiveFilter('ALL');
+      setSearchQuery('');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      alert(`${section} system is currently in read-only mode. Access restricted to Premium Brokers.`);
+      alert(`${section} Access Restricted: Your credentials allow Inventory access only. Contact your regional manager to unlock ${section.toLowerCase()} modules.`);
     }
   };
 
+  const handleFilterRequest = (filter: string) => {
+    setActiveFilter(filter);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen pb-20 selection:bg-amber-400 selection:text-black bg-[#1a1d23]">
+    <div className="min-h-screen pb-20 selection:bg-amber-400 selection:text-black bg-[#252932]">
       {/* Real-Time Live Feed Ticker */}
       <MoneyTicker totalProfit={totalMarketProfit} exchangeRate={exchangeRate} />
 
       {/* Navigation Header */}
-      <nav className="max-w-[1600px] mx-auto px-8 py-6 flex items-center justify-between border-b border-white/5">
+      <nav className="max-w-[1600px] mx-auto px-8 py-6 flex items-center justify-between border-b border-white/5 bg-black/10 backdrop-blur-sm sticky top-[41px] z-40">
         <div className="flex items-center gap-12">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
@@ -82,7 +88,7 @@ const App: React.FC = () => {
           </div>
           
           <div className="hidden lg:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-gray-400">
-            <a href="#" onClick={(e) => handleNavLinkClick(e, 'INVENTORY')} className="text-white hover:text-amber-400 transition-colors">Inventory</a>
+            <a href="#" onClick={(e) => handleNavLinkClick(e, 'INVENTORY')} className={`transition-colors ${activeFilter === 'ALL' && !searchQuery ? 'text-white' : 'hover:text-amber-400'}`}>Inventory</a>
             <a href="#" onClick={(e) => handleNavLinkClick(e, 'LOGISTICS')} className="hover:text-white transition-colors">Logistics</a>
             <a href="#" onClick={(e) => handleNavLinkClick(e, 'COMPLIANCE')} className="hover:text-white transition-colors">Compliance</a>
             <a href="#" onClick={(e) => handleNavLinkClick(e, 'REPORTS')} className="hover:text-white transition-colors">Reports</a>
@@ -92,9 +98,9 @@ const App: React.FC = () => {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-emerald-500 text-[10px] font-black uppercase">Vaughan Hub: Connected</span>
+            <span className="text-emerald-500 text-[10px] font-black uppercase tracking-widest">Vaughan Hub Active</span>
           </div>
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-slate-800 to-slate-700 border border-white/10" />
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-slate-700 to-slate-600 border border-white/10 shadow-lg cursor-pointer hover:border-amber-400/50 transition-all" />
         </div>
       </nav>
 
@@ -105,36 +111,36 @@ const App: React.FC = () => {
           <div className="col-span-12 lg:col-span-9 space-y-12">
             
             {/* Search and Filters */}
-            <div className="flex flex-col md:flex-row gap-6 justify-between items-center bg-white/5 p-4 rounded-3xl border border-white/5">
+            <div className="flex flex-col md:flex-row gap-6 justify-between items-center bg-black/20 p-4 rounded-3xl border border-white/5 shadow-2xl">
               <div className="relative w-full md:w-96">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                 <input 
                   type="text" 
-                  placeholder="Filter by Make, Model or VIN..."
+                  placeholder="Scan Intelligence (Make, Model, VIN)..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all placeholder:text-gray-600"
+                  className="w-full bg-black/40 border border-white/5 rounded-2xl py-3 pl-12 pr-4 text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all placeholder:text-gray-600 shadow-inner"
                 />
               </div>
               
-              <div className="flex items-center gap-2 p-1.5 bg-black/40 rounded-2xl border border-white/10">
+              <div className="flex items-center gap-2 p-1.5 bg-black/40 rounded-2xl border border-white/5 shadow-inner">
                 <button 
                   onClick={() => setActiveFilter('ALL')}
-                  className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activeFilter === 'ALL' ? 'bg-white text-black shadow-lg' : 'text-gray-500 hover:text-white'}`}
+                  className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all cursor-pointer ${activeFilter === 'ALL' ? 'bg-white text-black shadow-lg shadow-white/5' : 'text-gray-500 hover:text-white'}`}
                 >
-                  All Feeds
+                  Global Feed
                 </button>
                 <button 
                   onClick={() => setActiveFilter('HIGH_YIELD')}
-                  className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activeFilter === 'HIGH_YIELD' ? 'bg-amber-400 text-black shadow-lg' : 'text-gray-500 hover:text-white'}`}
+                  className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all cursor-pointer ${activeFilter === 'HIGH_YIELD' ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/5' : 'text-gray-500 hover:text-white'}`}
                 >
                   High Yield
                 </button>
                 <button 
                   onClick={() => setActiveFilter('NAFTA')}
-                  className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activeFilter === 'NAFTA' ? 'bg-blue-500 text-white shadow-lg' : 'text-gray-500 hover:text-white'}`}
+                  className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all cursor-pointer ${activeFilter === 'NAFTA' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/5' : 'text-gray-500 hover:text-white'}`}
                 >
-                  USMCA Native
+                  USMCA
                 </button>
               </div>
             </div>
@@ -149,51 +155,62 @@ const App: React.FC = () => {
                     exchangeRate={exchangeRate}
                     onAction={handleStartDeal}
                     onChat={(c) => setSelectedCarForChat(c)}
+                    onFilterSelect={handleFilterRequest}
                   />
                 ))
               ) : (
-                <div className="col-span-full py-20 text-center space-y-4">
-                  <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto text-gray-600">
-                    <Filter size={32} />
+                <div className="col-span-full py-32 text-center space-y-6">
+                  <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mx-auto text-gray-700 shadow-inner">
+                    <Filter size={40} />
                   </div>
-                  <p className="text-gray-500 font-bold uppercase tracking-widest">No intelligence found for this query.</p>
+                  <div>
+                    <p className="text-white text-lg font-bold">Zero Results Found</p>
+                    <p className="text-gray-500 text-sm font-medium">Your current filter parameters yielded no arbitrage opportunities.</p>
+                  </div>
+                  <button onClick={() => { setActiveFilter('ALL'); setSearchQuery(''); }} className="text-amber-400 text-xs font-black uppercase tracking-widest hover:underline cursor-pointer">Reset All Parameters</button>
                 </div>
               )}
             </div>
 
             {/* Bottom Trust Section (Inline) */}
-            <div className="bg-gradient-to-br from-amber-400/20 to-transparent p-12 rounded-[3rem] border border-amber-400/10 flex items-center justify-between">
+            <div className="bg-gradient-to-br from-amber-400/20 to-transparent p-12 rounded-[3rem] border border-amber-400/10 flex items-center justify-between shadow-2xl">
               <div className="max-w-xl">
-                <h2 className="text-white text-3xl font-black mb-4">UNLOCK THE ARBITRAGE</h2>
-                <p className="text-gray-400 text-sm leading-relaxed mb-6 italic">
-                  "The delta between Toronto luxury MSRPs and the US secondary market has reached a 10-year high. Our tools give you the proprietary edge to capture it."
+                <h2 className="text-white text-3xl font-black mb-4 uppercase tracking-tighter">Arbitrage Signal Active</h2>
+                <p className="text-gray-300 text-sm leading-relaxed mb-8 font-medium italic">
+                  "Market analysis indicates a widening spread between Toronto MSRP inventory and U.S. secondary market values. Proprietary data suggests a 48-hour window for maximum yields on current SUV stock."
                 </p>
-                <button className="bg-amber-400 text-black font-black px-10 py-4 rounded-2xl hover:bg-amber-300 transition-all flex items-center gap-3">
-                  ACCESS FULL MARKET REPORT
+                <button 
+                  onClick={() => alert("Market Report Generation: Restricted. Upgrade to Enterprise Plan to access full predictive analytics.")}
+                  className="bg-amber-400 text-black font-black px-10 py-5 rounded-2xl hover:bg-amber-300 transition-all flex items-center gap-3 shadow-xl shadow-amber-400/10 cursor-pointer"
+                >
+                  EXECUTE FULL MARKET SCAN
                   <ArrowUpRight size={20} />
                 </button>
               </div>
-              <div className="hidden xl:block">
-                 <Globe2 size={120} className="text-amber-400/20" />
+              <div className="hidden xl:block opacity-20">
+                 <Globe2 size={160} className="text-amber-400 animate-pulse" />
               </div>
             </div>
           </div>
 
           {/* Right Sidebar - 3 Cols */}
-          <aside className="hidden lg:block lg:col-span-3 space-y-8 h-fit sticky top-24">
+          <aside className="hidden lg:block lg:col-span-3 space-y-8 h-fit sticky top-40">
             <MarketPulse />
             
             {/* Mini Summary Stats */}
-            <div className="glass-card rounded-[2rem] p-6 border-white/5 space-y-4">
-              <h4 className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Portfolio Health</h4>
+            <div className="glass-card rounded-[2rem] p-6 border-white/5 space-y-4 shadow-xl">
+              <h4 className="text-gray-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                <BarChart3 size={12} />
+                Portfolio Analytics
+              </h4>
               <div className="flex justify-between items-end">
                 <div>
-                  <p className="text-white text-2xl font-black">2.4m</p>
-                  <p className="text-gray-500 text-[10px] font-bold uppercase">Liquidity Available</p>
+                  <p className="text-white text-2xl font-black">$2.4m</p>
+                  <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Broker Liquidity</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-emerald-400 text-sm font-black">+14%</p>
-                  <p className="text-gray-500 text-[10px] font-bold uppercase">Weekly Yield</p>
+                  <p className="text-emerald-400 text-sm font-black">+18.4%</p>
+                  <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Q3 Projection</p>
                 </div>
               </div>
             </div>
@@ -202,10 +219,15 @@ const App: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="max-w-[1600px] mx-auto px-8 pt-20 text-center border-t border-white/5 mt-20 pb-10">
-        <p className="text-gray-600 text-[9px] font-mono tracking-[1em] uppercase mb-8">
-          Exotic Intel GTA // Proprietary Algorithm 2.5 // Toronto HQ
+      <footer className="max-w-[1600px] mx-auto px-8 pt-20 text-center border-t border-white/5 mt-20 pb-12">
+        <p className="text-gray-600 text-[10px] font-mono tracking-[1.2em] uppercase mb-10">
+          EXOTIC INTEL // GLOBAL ARBITRAGE SYSTEM V4.12
         </p>
+        <div className="flex justify-center gap-8">
+            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+        </div>
       </footer>
 
       {/* AI Assistant Modal */}
