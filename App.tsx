@@ -5,6 +5,7 @@ import { MoneyTicker } from './components/MoneyTicker';
 import { CarCard } from './components/CarCard';
 import { AssistantModal } from './components/AssistantModal';
 import { MarketPulse } from './components/MarketPulse';
+import { Footer } from './components/Footer';
 import { calculateProfit } from './utils';
 import { Car } from './types';
 import { LayoutGrid, BarChart3, Globe2, Gem, Search, Filter, ArrowUpRight } from 'lucide-react';
@@ -73,25 +74,25 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen pb-20 selection:bg-amber-400 selection:text-black bg-[#252932]">
-      {/* Real-Time Live Feed Ticker */}
+    <div className="min-h-screen pb-0 selection:bg-amber-400 selection:text-black bg-[#252932]">
+      {/* Real-Time Live Feed Ticker - Z-50 */}
       <MoneyTicker totalProfit={totalMarketProfit} exchangeRate={exchangeRate} />
 
-      {/* Navigation Header */}
-      <nav className="max-w-[1600px] mx-auto px-8 py-6 flex items-center justify-between border-b border-white/5 bg-black/10 backdrop-blur-sm sticky top-[41px] z-40">
+      {/* Navigation Header - Enhanced Z-index and Opacity to prevent overlap clutter */}
+      <nav className="max-w-[1600px] mx-auto px-8 py-6 flex items-center justify-between border-b border-white/5 bg-[#252932]/95 backdrop-blur-xl sticky top-[41px] z-[60] shadow-sm">
         <div className="flex items-center gap-12">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-lg">
               <Gem size={20} className="text-black" />
             </div>
-            <h1 className="text-white text-xl font-black tracking-tighter">EXOTIC INTEL</h1>
+            <h1 className="text-white text-xl font-black tracking-tighter uppercase">Exotic Intel</h1>
           </div>
           
           <div className="hidden lg:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-gray-400">
-            <a href="#" onClick={(e) => handleNavLinkClick(e, 'INVENTORY')} className={`transition-colors ${activeFilter === 'ALL' && !searchQuery ? 'text-white' : 'hover:text-amber-400'}`}>Inventory</a>
-            <a href="#" onClick={(e) => handleNavLinkClick(e, 'LOGISTICS')} className="hover:text-white transition-colors">Logistics</a>
-            <a href="#" onClick={(e) => handleNavLinkClick(e, 'COMPLIANCE')} className="hover:text-white transition-colors">Compliance</a>
-            <a href="#" onClick={(e) => handleNavLinkClick(e, 'REPORTS')} className="hover:text-white transition-colors">Reports</a>
+            <a href="#" onClick={(e) => handleNavLinkClick(e, 'INVENTORY')} className={`transition-colors py-2 ${activeFilter === 'ALL' && !searchQuery ? 'text-white border-b border-white' : 'hover:text-amber-400'}`}>Inventory</a>
+            <a href="#" onClick={(e) => handleNavLinkClick(e, 'LOGISTICS')} className="hover:text-white transition-colors py-2">Logistics</a>
+            <a href="#" onClick={(e) => handleNavLinkClick(e, 'COMPLIANCE')} className="hover:text-white transition-colors py-2">Compliance</a>
+            <a href="#" onClick={(e) => handleNavLinkClick(e, 'REPORTS')} className="hover:text-white transition-colors py-2">Reports</a>
           </div>
         </div>
 
@@ -188,55 +189,4 @@ const App: React.FC = () => {
                 </button>
               </div>
               <div className="hidden xl:block opacity-20">
-                 <Globe2 size={160} className="text-amber-400 animate-pulse" />
-              </div>
-            </div>
-          </div>
-
-          {/* Right Sidebar - 3 Cols */}
-          <aside className="hidden lg:block lg:col-span-3 space-y-8 h-fit sticky top-40">
-            <MarketPulse />
-            
-            {/* Mini Summary Stats */}
-            <div className="glass-card rounded-[2rem] p-6 border-white/5 space-y-4 shadow-xl">
-              <h4 className="text-gray-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                <BarChart3 size={12} />
-                Portfolio Analytics
-              </h4>
-              <div className="flex justify-between items-end">
-                <div>
-                  <p className="text-white text-2xl font-black">$2.4m</p>
-                  <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Broker Liquidity</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-emerald-400 text-sm font-black">+18.4%</p>
-                  <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Q3 Projection</p>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="max-w-[1600px] mx-auto px-8 pt-20 text-center border-t border-white/5 mt-20 pb-12">
-        <p className="text-gray-600 text-[10px] font-mono tracking-[1.2em] uppercase mb-10">
-          EXOTIC INTEL // GLOBAL ARBITRAGE SYSTEM V4.12
-        </p>
-        <div className="flex justify-center gap-8">
-            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-        </div>
-      </footer>
-
-      {/* AI Assistant Modal */}
-      <AssistantModal 
-        car={selectedCarForChat} 
-        onClose={() => setSelectedCarForChat(null)} 
-      />
-    </div>
-  );
-};
-
-export default App;
+                 <Globe2 size={160} className="text-amber-40
