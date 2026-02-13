@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { MOCK_CARS } from './constants';
 import { MoneyTicker } from './components/MoneyTicker';
 import { CarCard } from './components/CarCard';
@@ -7,13 +7,33 @@ import { AssistantModal } from './components/AssistantModal';
 import { MarketPulse } from './components/MarketPulse';
 import { calculateProfit } from './utils';
 import { Car } from './types';
-// Fixed: Added missing ArrowUpRight import to resolve the reference error
 import { LayoutGrid, BarChart3, Globe2, Gem, Search, Filter, ArrowUpRight } from 'lucide-react';
 
 const App: React.FC = () => {
   const [selectedCarForChat, setSelectedCarForChat] = useState<Car | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('ALL');
+  const [exchangeRate, setExchangeRate] = useState(0.737); // Default fallback
+
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      try {
+        const response = await fetch('https://open.er-api.com/v6/latest/CAD');
+        const data = await response.json();
+        if (data && data.rates && data.rates.USD) {
+          setExchangeRate(data.rates.USD);
+          console.log('Exotic Intel: Live CAD/USD rate updated to', data.rates.USD);
+        }
+      } catch (error) {
+        console.error('Exotic Intel: Failed to fetch live exchange rate, using fallback.', error);
+      }
+    };
+
+    fetchExchangeRate();
+    // Refresh rate every 15 minutes
+    const interval = setInterval(fetchExchangeRate, 15 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const filteredCars = useMemo(() => {
     return MOCK_CARS.filter(car => {
@@ -21,25 +41,35 @@ const App: React.FC = () => {
         car.make.toLowerCase().includes(searchQuery.toLowerCase()) || 
         car.model.toLowerCase().includes(searchQuery.toLowerCase());
       
-      const profit = calculateProfit(car);
+      const profit = calculateProfit(car, exchangeRate);
       if (activeFilter === 'HIGH_YIELD') return matchesSearch && profit.isHighYield;
       if (activeFilter === 'NAFTA') return matchesSearch && car.isNorthAmerican;
       return matchesSearch;
     });
-  }, [searchQuery, activeFilter]);
+  }, [searchQuery, activeFilter, exchangeRate]);
 
   const totalMarketProfit = useMemo(() => {
-    return MOCK_CARS.reduce((acc, car) => acc + calculateProfit(car).netProfit, 0);
-  }, []);
+    return MOCK_CARS.reduce((acc, car) => acc + calculateProfit(car, exchangeRate).netProfit, 0);
+  }, [exchangeRate]);
 
   const handleStartDeal = (car: Car) => {
     alert(`Initializing Smart-Contract Import for ${car.make} ${car.model}...\nOur Toronto agents will contact you within 60 minutes.`);
   };
 
+  const handleNavLinkClick = (e: React.MouseEvent, section: string) => {
+    e.preventDefault();
+    if (section === 'INVENTORY') {
+      setActiveFilter('ALL');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      alert(`${section} system is currently in read-only mode. Access restricted to Premium Brokers.`);
+    }
+  };
+
   return (
-    <div className="min-h-screen pb-20 selection:bg-amber-400 selection:text-black bg-slate-950">
+    <div className="min-h-screen pb-20 selection:bg-amber-400 selection:text-black bg-[#1a1d23]">
       {/* Real-Time Live Feed Ticker */}
-      <MoneyTicker totalProfit={totalMarketProfit} />
+      <MoneyTicker totalProfit={totalMarketProfit} exchangeRate={exchangeRate} />
 
       {/* Navigation Header */}
       <nav className="max-w-[1600px] mx-auto px-8 py-6 flex items-center justify-between border-b border-white/5">
@@ -51,11 +81,11 @@ const App: React.FC = () => {
             <h1 className="text-white text-xl font-black tracking-tighter">EXOTIC INTEL</h1>
           </div>
           
-          <div className="hidden lg:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-gray-500">
-            <a href="#" className="text-white">Inventory</a>
-            <a href="#" className="hover:text-white transition-colors">Logistics</a>
-            <a href="#" className="hover:text-white transition-colors">Compliance</a>
-            <a href="#" className="hover:text-white transition-colors">Reports</a>
+          <div className="hidden lg:flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+            <a href="#" onClick={(e) => handleNavLinkClick(e, 'INVENTORY')} className="text-white hover:text-amber-400 transition-colors">Inventory</a>
+            <a href="#" onClick={(e) => handleNavLinkClick(e, 'LOGISTICS')} className="hover:text-white transition-colors">Logistics</a>
+            <a href="#" onClick={(e) => handleNavLinkClick(e, 'COMPLIANCE')} className="hover:text-white transition-colors">Compliance</a>
+            <a href="#" onClick={(e) => handleNavLinkClick(e, 'REPORTS')} className="hover:text-white transition-colors">Reports</a>
           </div>
         </div>
 
@@ -83,7 +113,7 @@ const App: React.FC = () => {
                   placeholder="Filter by Make, Model or VIN..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-black/40 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                  className="w-full bg-black/40 border border-white/10 rounded-2xl py-3 pl-12 pr-4 text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all placeholder:text-gray-600"
                 />
               </div>
               
@@ -116,6 +146,7 @@ const App: React.FC = () => {
                   <CarCard 
                     key={car.id} 
                     car={car} 
+                    exchangeRate={exchangeRate}
                     onAction={handleStartDeal}
                     onChat={(c) => setSelectedCarForChat(c)}
                   />
@@ -154,15 +185,15 @@ const App: React.FC = () => {
             
             {/* Mini Summary Stats */}
             <div className="glass-card rounded-[2rem] p-6 border-white/5 space-y-4">
-              <h4 className="text-gray-500 text-[10px] font-black uppercase tracking-widest">Portfolio Health</h4>
+              <h4 className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Portfolio Health</h4>
               <div className="flex justify-between items-end">
                 <div>
                   <p className="text-white text-2xl font-black">2.4m</p>
-                  <p className="text-gray-600 text-[10px] font-bold uppercase">Liquidity Available</p>
+                  <p className="text-gray-500 text-[10px] font-bold uppercase">Liquidity Available</p>
                 </div>
                 <div className="text-right">
                   <p className="text-emerald-400 text-sm font-black">+14%</p>
-                  <p className="text-gray-600 text-[10px] font-bold uppercase">Weekly Yield</p>
+                  <p className="text-gray-500 text-[10px] font-bold uppercase">Weekly Yield</p>
                 </div>
               </div>
             </div>

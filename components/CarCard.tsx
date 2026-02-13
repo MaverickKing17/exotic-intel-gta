@@ -1,17 +1,18 @@
 
 import React from 'react';
-import { Car, ProfitBreakdown } from '../types';
+import { Car } from '../types';
 import { calculateProfit, formatCurrency } from '../utils';
-import { ShieldCheck, Zap, TrendingUp, DollarSign, Clock } from 'lucide-react';
+import { ShieldCheck, Zap, TrendingUp, Clock } from 'lucide-react';
 
 interface CarCardProps {
   car: Car;
+  exchangeRate: number;
   onAction: (car: Car) => void;
   onChat: (car: Car) => void;
 }
 
-export const CarCard: React.FC<CarCardProps> = ({ car, onAction, onChat }) => {
-  const profit = calculateProfit(car);
+export const CarCard: React.FC<CarCardProps> = ({ car, exchangeRate, onAction, onChat }) => {
+  const profit = calculateProfit(car, exchangeRate);
 
   return (
     <div className="glass-card rounded-2xl overflow-hidden group transition-all duration-500 hover:translate-y-[-4px] hover:shadow-2xl hover:shadow-black/50">

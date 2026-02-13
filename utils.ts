@@ -1,9 +1,9 @@
 
-import { EXCHANGE_RATE, TAX_RATE, TOTAL_FIXED_FEES } from './constants';
+import { TAX_RATE, TOTAL_FIXED_FEES } from './constants';
 import { Car, ProfitBreakdown } from './types';
 
-export const calculateProfit = (car: Car): ProfitBreakdown => {
-  const usdBasePrice = car.cadPrice * EXCHANGE_RATE;
+export const calculateProfit = (car: Car, exchangeRate: number): ProfitBreakdown => {
+  const usdBasePrice = car.cadPrice * exchangeRate;
   
   let taxAmount = 0;
   if (car.isNorthAmerican) {
