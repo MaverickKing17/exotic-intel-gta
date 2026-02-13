@@ -11,57 +11,68 @@
     <meta property="og:description" content="Real-time profit modeling for cross-border luxury vehicle trading.">
     <meta property="og:type" content="website">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
       :root {
-        --bloomberg-green: #00ff88;
-        --bloomberg-amber: #ffb800;
-        --bloomberg-red: #ff4d4d;
-        /* Microsoft Corporate Blue / Azure */
-        --ticker-bg: #0078d4; 
-        --ticker-text: #ffffff;
+        --ms-azure: #0078d4;
+        --ms-azure-dark: #005a9e;
+        --ms-azure-light: #2b88d8;
+        --ticker-bg: var(--ms-azure);
       }
+      
+      * {
+        /* Strictly enforcing Microsoft Segoe UI font stack globally */
+        font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
+      }
+
       body {
-        /* Standard Microsoft System Font Stack */
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Inter';
-        background-color: #1e222d;
+        background-color: #1c1f26;
         margin: 0;
         overflow-x: hidden;
         color: white;
       }
+
       .glass-card {
         background: rgba(30, 34, 45, 0.85);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.05);
       }
+
       .ticker-wrap {
         overflow: hidden;
         height: 100%;
         background: var(--ticker-bg);
         position: relative;
       }
+
       .ticker-move {
         display: flex;
         width: max-content;
         animation: ticker 60s linear infinite;
       }
+
       @keyframes ticker {
         0% { transform: translateX(0); }
         100% { transform: translateX(-50%); }
       }
+
+      /* Microsoft Consolas for mono elements */
       .font-mono-elite {
-        font-family: 'JetBrains Mono', 'Consolas', monospace;
+        font-family: "Consolas", "Monaco", "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace !important;
       }
+
       /* Floating Chat Button Pulse */
       .chat-pulse {
         box-shadow: 0 0 0 0 rgba(251, 184, 0, 0.7);
         animation: chat-pulse-anim 2s infinite;
       }
+
       @keyframes chat-pulse-anim {
         0% { box-shadow: 0 0 0 0 rgba(251, 184, 0, 0.7); }
         70% { box-shadow: 0 0 0 20px rgba(251, 184, 0, 0); }
         100% { box-shadow: 0 0 0 0 rgba(251, 184, 0, 0); }
       }
+
       ::-webkit-scrollbar { width: 6px; }
       ::-webkit-scrollbar-track { background: #1c1f26; }
       ::-webkit-scrollbar-thumb { background: #333945; border-radius: 10px; }
