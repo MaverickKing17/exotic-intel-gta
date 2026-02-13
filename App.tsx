@@ -10,11 +10,13 @@ import { NegotiationAssistant } from './components/NegotiationAssistant';
 import { calculateProfit } from './utils';
 import { Car } from './types';
 import { fetchPorscheInventory } from './supabaseService';
+import { fetchBorderStatus, BorderStatus } from './borderService';
 import { 
   Globe2, Gem, Search, Filter, ArrowUpRight, X, ShieldAlert, 
   Truck, ShieldCheck, MapPin, FileText, CheckCircle2, 
   TrendingUp, BarChart3, AlertCircle, Ship, Landmark,
-  Clock, Database, MessageSquareText, Sparkles
+  Clock, Database, MessageSquareText, Sparkles, Activity,
+  Info
 } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -27,6 +29,7 @@ const App: React.FC = () => {
   const [legalModal, setLegalModal] = useState<{title: string, content: string} | null>(null);
   const [currentView, setCurrentView] = useState<'INVENTORY' | 'LOGISTICS' | 'COMPLIANCE' | 'REPORTS'>('INVENTORY');
   const [userHub, setUserHub] = useState('TORONTO HUB');
+  const [borderStats, setBorderStats] = useState<BorderStatus[]>([]);
 
   // Unified Inventory Management
   const allCars = useMemo(() => {
@@ -39,7 +42,6 @@ const App: React.FC = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          // Dynamic hub status based on precision location
           const hubPrefix = pos.coords.latitude > 43.6 ? 'NORTH VAUGHAN HUB' : 'DOWNTOWN ACCESS POINT';
           setUserHub(`${hubPrefix} [SECURE]`);
         },
@@ -60,10 +62,14 @@ const App: React.FC = () => {
       // Supabase Private Inventory Pulse
       const porsches = await fetchPorscheInventory();
       setLiveCars(porsches);
+
+      // Border Status Sync
+      const borders = await fetchBorderStatus();
+      setBorderStats(borders);
     };
 
     initData();
-    const interval = setInterval(initData, 5 * 60 * 1000); // Higher frequency sync
+    const interval = setInterval(initData, 5 * 60 * 1000); 
     return () => clearInterval(interval);
   }, []);
 
@@ -108,8 +114,54 @@ const App: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-emerald-500 text-[11px] font-black uppercase tracking-widest">Border Clear</span>
+                <span className="text-emerald-500 text-[11px] font-black uppercase tracking-widest">Global Linkage Online</span>
               </div>
+            </div>
+
+            {/* LIVE BORDER STATUS SECTION */}
+            <div className="glass-card p-10 rounded-[4rem] border-white/10 relative overflow-hidden bg-gradient-to-br from-slate-900/50 to-black/50">
+               <div className="flex items-center justify-between mb-8">
+                 <div className="flex items-center gap-4">
+                   <div className="p-3 bg-amber-400/10 rounded-2xl border border-amber-400/20 text-amber-400">
+                     <Activity size={24} />
+                   </div>
+                   <div>
+                     <h3 className="text-white text-xl font-black uppercase tracking-tight">Border Wait Recon</h3>
+                     <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest">Real-time CBP/CBSA Feed</p>
+                   </div>
+                 </div>
+                 <div className="text-right">
+                   <p className="text-white/40 text-[9px] font-black uppercase tracking-widest mb-1">Last Signal Sync</p>
+                   <p className="text-white font-mono text-sm">{borderStats[0]?.lastUpdated || '--:--'}</p>
+                 </div>
+               </div>
+
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                 {borderStats.map((b, i) => (
+                   <div key={i} className="bg-black/40 border border-white/5 p-6 rounded-[2rem] hover:border-white/20 transition-all group">
+                     <div className="flex justify-between items-start mb-4">
+                        <p className="text-white font-black text-sm uppercase group-hover:text-amber-400 transition-colors">{b.bridge}</p>
+                        <span className={`text-[8px] font-black px-2 py-1 rounded-md ${
+                          b.status === 'OPTIMAL' ? 'bg-emerald-500/10 text-emerald-500' :
+                          b.status === 'DELAYED' ? 'bg-amber-400/10 text-amber-400' : 'bg-rose-500/10 text-rose-500'
+                        }`}>
+                          {b.status}
+                        </span>
+                     </div>
+                     <div className="space-y-4">
+                        <div className="flex justify-between items-end">
+                           <p className="text-gray-500 text-[9px] font-black uppercase">Auto Wait</p>
+                           <p className="text-white text-base font-black">{b.carWait}</p>
+                        </div>
+                        <div className="flex justify-between items-end border-t border-white/5 pt-2">
+                           <p className="text-gray-500 text-[9px] font-black uppercase">Comm Wait</p>
+                           <p className="text-white text-base font-black">{b.truckWait}</p>
+                        </div>
+                        <p className="text-gray-600 text-[8px] font-medium leading-tight mt-2">{b.location}</p>
+                     </div>
+                   </div>
+                 ))}
+               </div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -342,7 +394,7 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-[#1c1f26] selection:bg-amber-400 selection:text-black flex flex-col transition-colors duration-500">
       <MoneyTicker totalProfit={totalMarketProfit} exchangeRate={exchangeRate} location={userHub} />
 
-      <nav className="w-full bg-[#1c1f26]/95 border-b border-white/5 sticky top-[44px] z-[100] shadow-2xl backdrop-blur-xl">
+      <nav className="w-full bg-[#1c1f26]/95 border-b border-white/5 sticky top-[48px] z-[100] shadow-2xl backdrop-blur-xl">
         <div className="max-w-[1700px] mx-auto px-10 py-6 flex items-center justify-between">
           <div className="flex items-center gap-16">
             <div className="flex items-center gap-3 group cursor-pointer" onClick={(e) => handleNavLinkClick(e, 'INVENTORY')}>
