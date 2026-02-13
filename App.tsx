@@ -14,7 +14,7 @@ import {
   Globe2, Gem, Search, Filter, ArrowUpRight, X, ShieldAlert, 
   Truck, ShieldCheck, MapPin, FileText, CheckCircle2, 
   TrendingUp, BarChart3, AlertCircle, Ship, Landmark,
-  Clock, Database, Zap
+  Clock, Database, MessageSquareText, Sparkles
 } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -23,9 +23,10 @@ const App: React.FC = () => {
   const [selectedCarForDeal, setSelectedCarForDeal] = useState<Car | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('ALL');
-  const [exchangeRate, setExchangeRate] = useState(0.737);
+  const [exchangeRate, setExchangeRate] = useState(0.734);
   const [legalModal, setLegalModal] = useState<{title: string, content: string} | null>(null);
   const [currentView, setCurrentView] = useState<'INVENTORY' | 'LOGISTICS' | 'COMPLIANCE' | 'REPORTS'>('INVENTORY');
+  const [userHub, setUserHub] = useState('TORONTO HUB');
 
   // Unified Inventory Management
   const allCars = useMemo(() => {
@@ -34,6 +35,18 @@ const App: React.FC = () => {
   }, [liveCars]);
 
   useEffect(() => {
+    // GEO Implementation for AI Context
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          // Dynamic hub status based on precision location
+          const hubPrefix = pos.coords.latitude > 43.6 ? 'NORTH VAUGHAN HUB' : 'DOWNTOWN ACCESS POINT';
+          setUserHub(`${hubPrefix} [SECURE]`);
+        },
+        () => setUserHub('GLOBAL ACCESS HUB')
+      );
+    }
+
     const initData = async () => {
       // Frankfurter Real-time FX Pulse
       try {
@@ -41,7 +54,7 @@ const App: React.FC = () => {
         const data = await response.json();
         if (data?.rates?.USD) setExchangeRate(data.rates.USD);
       } catch (e) { 
-        console.warn('Frankfurter FX fallback initialized.');
+        console.warn('FX fallback active.');
       }
 
       // Supabase Private Inventory Pulse
@@ -50,7 +63,7 @@ const App: React.FC = () => {
     };
 
     initData();
-    const interval = setInterval(initData, 10 * 60 * 1000); // 10 minute refresh cycle
+    const interval = setInterval(initData, 5 * 60 * 1000); // Higher frequency sync
     return () => clearInterval(interval);
   }, []);
 
@@ -326,10 +339,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#111317] selection:bg-amber-400 selection:text-black flex flex-col">
-      <MoneyTicker totalProfit={totalMarketProfit} exchangeRate={exchangeRate} />
+    <div className="min-h-screen bg-[#1c1f26] selection:bg-amber-400 selection:text-black flex flex-col transition-colors duration-500">
+      <MoneyTicker totalProfit={totalMarketProfit} exchangeRate={exchangeRate} location={userHub} />
 
-      <nav className="w-full bg-[#111317]/95 border-b border-white/5 sticky top-[41px] z-[100] shadow-2xl backdrop-blur-xl">
+      <nav className="w-full bg-[#1c1f26]/95 border-b border-white/5 sticky top-[44px] z-[100] shadow-2xl backdrop-blur-xl">
         <div className="max-w-[1700px] mx-auto px-10 py-6 flex items-center justify-between">
           <div className="flex items-center gap-16">
             <div className="flex items-center gap-3 group cursor-pointer" onClick={(e) => handleNavLinkClick(e, 'INVENTORY')}>
@@ -356,7 +369,7 @@ const App: React.FC = () => {
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,1)]" />
-              <span className="text-emerald-500 text-[10px] font-black uppercase tracking-[0.2em]">Toronto Hub Elite</span>
+              <span className="text-emerald-500 text-[10px] font-black uppercase tracking-[0.2em]">SaaS Active</span>
             </div>
             <div className="w-12 h-12 rounded-2xl bg-slate-800 border border-white/10 flex items-center justify-center cursor-pointer hover:border-amber-400/50 transition-all shadow-xl group">
               <div className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse group-hover:scale-125 transition-transform" />
@@ -403,6 +416,20 @@ const App: React.FC = () => {
         onShowLegal={(title, content) => setLegalModal({title, content})}
         onContactSupport={() => alert('Toronto Broker Desk: Initializing live neural connection...')}
       />
+
+      {/* Floating AI Concierge Chat */}
+      <div className="fixed bottom-8 right-8 z-[150] group">
+        <div className="absolute -top-12 right-0 bg-white text-black px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all whitespace-nowrap shadow-2xl flex items-center gap-2">
+          <Sparkles size={12} className="text-amber-500" />
+          Neural Concierge Online
+        </div>
+        <button 
+          onClick={() => setSelectedCarForChat(allCars[0])}
+          className="w-16 h-16 bg-amber-400 rounded-[1.5rem] flex items-center justify-center text-black shadow-[0_20px_50px_rgba(251,184,0,0.4)] chat-pulse hover:scale-110 hover:rotate-[10deg] active:scale-95 transition-all"
+        >
+          <MessageSquareText size={32} />
+        </button>
+      </div>
 
       {legalModal && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-8 bg-black/98 backdrop-blur-2xl">

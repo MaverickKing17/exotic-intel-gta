@@ -1,7 +1,8 @@
 {
-  "name": "Exotic Intel GTA",
-  "description": "A high-end SaaS dashboard for finding and importing luxury cars from Toronto to the U.S. market, featuring automated profit math, AI-driven sales predictions, and a premium Apple/Tesla-inspired interface.",
+  "name": "Exotic Intel GTA | Premier Automotive Arbitrage",
+  "description": "High-performance SaaS for luxury car arbitrage between Toronto and the US. Featuring real-time USMCA duty calculations, MarketCheck integration, and AI-driven profit modeling for elite brokers.",
   "requestFramePermissions": [
-    "microphone"
+    "microphone",
+    "geolocation"
   ]
 }

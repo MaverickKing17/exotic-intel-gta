@@ -4,34 +4,64 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Exotic Intel GTA | Toronto Luxury Arbitrage</title>
+    <title>Exotic Intel GTA | Toronto Luxury Arbitrage & Neural Profit Hub</title>
+    <meta name="description" content="Elite automotive arbitrage engine for the Toronto to US export corridor. Real-time 2026 Tariff modeling and USMCA compliance.">
+    <meta name="keywords" content="Luxury Car Arbitrage, Toronto Auto Export, USMCA Tariff 2026, Porsche Export Canada, Exotic Intel, GTA Automotive SaaS">
+    <meta property="og:title" content="Exotic Intel GTA | Neural Arbitrage Engine">
+    <meta property="og:description" content="Real-time profit modeling for cross-border luxury vehicle trading.">
+    <meta property="og:type" content="website">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+      :root {
+        --bloomberg-green: #00ff88;
+        --bloomberg-amber: #ffb800;
+        --bloomberg-red: #ff4d4d;
+        --ticker-bg: #1e222d;
+      }
       body {
         font-family: 'Inter', sans-serif;
-        background-color: #1a1d23; /* Darker Midnight for better contrast */
+        background-color: #1c1f26;
         margin: 0;
         overflow-x: hidden;
         color: white;
       }
       .glass-card {
-        background: rgba(15, 23, 42, 0.9);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(24, 27, 34, 0.85);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
       }
-      @keyframes pulse-gold {
-        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0px #fbbf24); }
-        50% { transform: scale(1.05); filter: drop-shadow(0 0 10px #fbbf24); }
+      .ticker-wrap {
+        overflow: hidden;
+        height: 100%;
+        background: var(--ticker-bg);
+        position: relative;
       }
-      .animate-pulse-gold {
-        animation: pulse-gold 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      .ticker-move {
+        display: flex;
+        width: max-content;
+        animation: ticker 60s linear infinite;
       }
-      /* Custom Scrollbar for Automotive Aesthetic */
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: #1a1d23; }
-      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-      ::-webkit-scrollbar-thumb:hover { background: #475569; }
+      @keyframes ticker {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+      .font-mono-elite {
+        font-family: 'JetBrains Mono', monospace;
+      }
+      /* Floating Chat Button Pulse */
+      .chat-pulse {
+        box-shadow: 0 0 0 0 rgba(251, 184, 0, 0.7);
+        animation: chat-pulse-anim 2s infinite;
+      }
+      @keyframes chat-pulse-anim {
+        0% { box-shadow: 0 0 0 0 rgba(251, 184, 0, 0.7); }
+        70% { box-shadow: 0 0 0 20px rgba(251, 184, 0, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(251, 184, 0, 0); }
+      }
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: #1c1f26; }
+      ::-webkit-scrollbar-thumb { background: #333945; border-radius: 10px; }
     </style>
     <script type="importmap">
     {
@@ -47,7 +77,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- CRITICAL: Entry point for the application bundle -->
     <script type="module" src="./index.tsx"></script>
   </body>
 </html>
