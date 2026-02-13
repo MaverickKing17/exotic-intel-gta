@@ -1,0 +1,7 @@
+{
+  "name": "Exotic Intel GTA",
+  "description": "A high-end SaaS dashboard for finding and importing luxury cars from Toronto to the U.S. market, featuring automated profit math, AI-driven sales predictions, and a premium Apple/Tesla-inspired interface.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
