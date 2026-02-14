@@ -10,45 +10,44 @@ export interface BorderStatus {
 
 /**
  * Fetches real-time border wait times for key GTA-US corridors.
- * Simulated for the 100M SaaS UI demo, designed for direct CBP/CBSA API integration.
+ * Simulated for the 100M SaaS UI demo with dynamic variance logic to mimic live API behavior.
  */
 export const fetchBorderStatus = async (): Promise<BorderStatus[]> => {
-  // Real integration would fetch from: https://bwt.cbp.gov/api/v1/borderwait/port/090101
-  // For the elite UI experience, we provide high-fidelity real-time simulation
   const now = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-  
-  return [
-    {
-      bridge: 'Peace Bridge',
-      location: 'Fort Erie, ON / Buffalo, NY',
-      carWait: '12 min',
-      truckWait: '25 min',
-      status: 'OPTIMAL',
-      lastUpdated: now
-    },
-    {
-      bridge: 'Rainbow Bridge',
-      location: 'Niagara Falls, ON / NY',
-      carWait: '45 min',
-      truckWait: 'N/A', // No commercial traffic
-      status: 'DELAYED',
-      lastUpdated: now
-    },
-    {
-      bridge: 'Queenston-Lewiston',
-      location: 'Niagara-on-the-Lake, ON',
-      carWait: '18 min',
-      truckWait: '32 min',
-      status: 'OPTIMAL',
-      lastUpdated: now
-    },
-    {
-      bridge: 'Ambassador Bridge',
-      location: 'Windsor, ON / Detroit, MI',
-      carWait: '55 min',
-      truckWait: '82 min',
-      status: 'CONGESTED',
-      lastUpdated: now
-    }
+
+  // Helper to determine status based on car wait time thresholds
+  const getStatus = (wait: number): 'OPTIMAL' | 'DELAYED' | 'CONGESTED' => {
+    if (wait < 25) return 'OPTIMAL';
+    if (wait < 50) return 'DELAYED';
+    return 'CONGESTED';
+  };
+
+  // Base crossing data for the GTA corridor
+  const bridges = [
+    { name: 'Peace Bridge', loc: 'Fort Erie, ON / Buffalo, NY', baseCar: 15, baseTruck: 28 },
+    { name: 'Rainbow Bridge', loc: 'Niagara Falls, ON / NY', baseCar: 42, baseTruck: null },
+    { name: 'Queenston-Lewiston', loc: 'Niagara-on-the-Lake, ON', baseCar: 20, baseTruck: 35 },
+    { name: 'Ambassador Bridge', loc: 'Windsor, ON / Detroit, MI', baseCar: 58, baseTruck: 85 },
   ];
+
+  // Map to BorderStatus with randomized "live" fluctuations
+  return bridges.map(b => {
+    // Generate slight fluctuations: +/- 8 mins for cars, +/- 12 mins for trucks
+    const carFluctuation = Math.floor(Math.random() * 16) - 8;
+    const truckFluctuation = Math.floor(Math.random() * 24) - 12;
+
+    const carWaitVal = Math.max(2, b.baseCar + carFluctuation);
+    const truckWaitVal = b.baseTruck !== null 
+      ? Math.max(5, b.baseTruck + truckFluctuation) 
+      : null;
+    
+    return {
+      bridge: b.name,
+      location: b.loc,
+      carWait: `${carWaitVal} min`,
+      truckWait: truckWaitVal !== null ? `${truckWaitVal} min` : 'N/A',
+      status: getStatus(carWaitVal),
+      lastUpdated: now
+    };
+  });
 };
