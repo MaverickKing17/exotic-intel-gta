@@ -7,20 +7,27 @@ export interface Car {
   cadPrice: number;
   vin?: string;
   isNorthAmerican: boolean;
-  usPartPercentage: number; // 0 to 1
+  usPartPercentage: number;
   image: string;
-  speedToSale: number; // estimated days
+  speedToSale: number;
   historyId: string;
   expectedUsResale: number;
   isLive?: boolean;
+  // New Analytics Fields
+  isWinterDriven?: boolean; 
+  hasHeatedStorage?: boolean;
+  locationDistrict?: 'VAUGHAN' | 'OAKVILLE' | 'MARKHAM' | 'DOWNTOWN' | 'MISSISSAUGA';
 }
 
 export interface ProfitBreakdown {
   usdBasePrice: number;
   taxAmount: number;
+  luxuryTaxAmount: number;
   fixedFees: number;
   totalCostUsd: number;
   netProfit: number;
   isHighYield: boolean;
-  vinStatus: 'ZERO-TARIFF UNICORN' | 'FOREIGN (2026 RULE)';
+  vinStatus: 'CUSMA ELIGIBLE' | 'FOREIGN (TARIFF APPLIED)';
+  winterDeduction: number;
+  storagePremium: number;
 }

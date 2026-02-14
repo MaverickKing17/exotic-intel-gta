@@ -49,8 +49,9 @@ export const getNegotiationStrategy = async (carData: any, profitData: any) => {
   `;
 
   try {
+    // Upgraded to gemini-3-pro-preview for complex reasoning and arbitrage strategy analysis as per guidelines
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-3-pro-preview",
       contents: prompt,
       config: {
         systemInstruction: "You are a world-class automotive arbitrage consultant specializing in the Toronto (GTA) to US export market. Your advice is sharp, aggressive for profit, and legally sound.",

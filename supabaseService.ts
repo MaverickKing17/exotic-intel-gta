@@ -8,9 +8,31 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /**
- * Fetches the latest Porsche inventory from the private Supabase node.
- * Maps high-fidelity data including VIN and market-specific metadata.
+ * Pushes a qualified 'Alex' lead to the leads table for CRM processing.
  */
+export const submitAlexLead = async (car: Car, profit: number) => {
+  try {
+    const { data, error } = await supabase
+      .from('leads')
+      .insert([
+        { 
+          car_id: car.id, 
+          car_name: `${car.year} ${car.make} ${car.model}`,
+          source: 'Alex-Neural-Recon',
+          potential_profit: profit,
+          qualified_at: new Date().toISOString(),
+          status: 'QUALIFIED'
+        }
+      ]);
+    
+    if (error) throw error;
+    return true;
+  } catch (err) {
+    console.error('Lead Submission Error:', err);
+    return false;
+  }
+};
+
 export const fetchPorscheInventory = async (): Promise<Car[]> => {
   try {
     const { data, error } = await supabase
@@ -22,13 +44,8 @@ export const fetchPorscheInventory = async (): Promise<Car[]> => {
 
     if (error) throw error;
 
-    // Map Supabase schema to our elite Car interface with explicit VIN translation and USMCA derivation
     return (data || []).map((item: any) => {
-      // Normalize VIN: Trim and ensure uppercase for standard formatting
       const vinValue = (item.vin || '').trim().toUpperCase();
-      
-      // USMCA Intelligence: VINs starting with 1, 2, 3, 4, or 5 indicate North American assembly
-      // (1, 4, 5 = USA; 2 = Canada; 3 = Mexico). Essential for duty-free filtering.
       const isNorthAmerican = /^[1-5]/.test(vinValue);
 
       return {
@@ -39,12 +56,15 @@ export const fetchPorscheInventory = async (): Promise<Car[]> => {
         cadPrice: item.price_cad || 0,
         vin: vinValue,
         isNorthAmerican: isNorthAmerican,
-        usPartPercentage: isNorthAmerican ? 0.85 : 0.05, // Estimated part value based on origin
+        usPartPercentage: isNorthAmerican ? 0.85 : 0.05,
         image: item.image_url || 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=1200',
         speedToSale: item.demand_score || 10,
         historyId: `SUPA-${item.id}`,
         expectedUsResale: item.expected_us_resale || 0,
-        isLive: true // UI distinction for real-time inventory from the node
+        isLive: true,
+        // Mocking climate fields for Supabase inventory to demonstrate component
+        isWinterDriven: Math.random() > 0.7,
+        hasHeatedStorage: Math.random() > 0.4
       };
     });
   } catch (error) {

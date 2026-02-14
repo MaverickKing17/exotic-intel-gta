@@ -39,14 +39,14 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
               The premier GTA intelligence engine for cross-border luxury arbitrage. Powering Toronto's most elite brokerages with real-time USMCA data and neural market modeling.
             </p>
             <div className="flex gap-6">
-              <Instagram size={20} className="text-gray-500 hover:text-[#E4405F] hover:scale-125 transition-all cursor-pointer" />
-              <Twitter size={20} className="text-gray-500 hover:text-[#1DA1F2] hover:scale-125 transition-all cursor-pointer" />
-              <Linkedin size={20} className="text-gray-500 hover:text-[#0077B5] hover:scale-125 transition-all cursor-pointer" />
-              <Facebook size={20} className="text-gray-500 hover:text-[#1877F2] hover:scale-125 transition-all cursor-pointer" />
+              <Instagram size={20} className="text-gray-500 hover:text-[#E4405F] hover:scale-125 transition-all cursor-pointer" onClick={onContactSupport} />
+              <Twitter size={20} className="text-gray-500 hover:text-[#1DA1F2] hover:scale-125 transition-all cursor-pointer" onClick={onContactSupport} />
+              <Linkedin size={20} className="text-gray-500 hover:text-[#0077B5] hover:scale-125 transition-all cursor-pointer" onClick={onContactSupport} />
+              <Facebook size={20} className="text-gray-500 hover:text-[#1877F2] hover:scale-125 transition-all cursor-pointer" onClick={onContactSupport} />
             </div>
           </div>
 
-          {/* Links Sections - Using Bright White for High Contrast */}
+          {/* Links Sections */}
           <div className="space-y-6">
             <h4 className="text-amber-400 text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-2">
               <Users size={12} /> Broker Network
@@ -54,7 +54,7 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
             <ul className="space-y-4">
               {['Live Inventory Feed', 'Auction Intelligence', 'White Label Solutions', 'Broker API Docs', 'GTA Dealer Portal'].map((link) => (
                 <li key={link}>
-                  <button onClick={() => alert(`Accessing ${link}...`)} className="text-white hover:text-amber-400 transition-colors text-xs font-black uppercase tracking-widest block text-left">{link}</button>
+                  <button onClick={onContactSupport} className="text-white hover:text-amber-400 transition-colors text-xs font-black uppercase tracking-widest block text-left">{link}</button>
                 </li>
               ))}
             </ul>
@@ -65,11 +65,11 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
               <ShieldCheck size={12} /> Compliance
             </h4>
             <ul className="space-y-4">
-              <li><button onClick={() => alert('OMVIC Protocol Status: SECURE')} className="text-white hover:text-amber-400 transition-colors text-xs font-black uppercase tracking-widest">OMVIC Registry</button></li>
-              <li><button onClick={() => alert('USMCA Clearing Desk active.')} className="text-white hover:text-amber-400 transition-colors text-xs font-black uppercase tracking-widest">USMCA Clearing</button></li>
+              <li><button onClick={onContactSupport} className="text-white hover:text-amber-400 transition-colors text-xs font-black uppercase tracking-widest">OMVIC Registry</button></li>
+              <li><button onClick={onContactSupport} className="text-white hover:text-amber-400 transition-colors text-xs font-black uppercase tracking-widest">USMCA Clearing</button></li>
               {['CBP Audit Logs', 'VIN History Verification', 'Cross-Border Permits'].map((link) => (
                 <li key={link}>
-                  <button onClick={() => alert(`Reviewing ${link}...`)} className="text-white hover:text-amber-400 transition-colors text-xs font-black uppercase tracking-widest block text-left">{link}</button>
+                  <button onClick={onContactSupport} className="text-white hover:text-amber-400 transition-colors text-xs font-black uppercase tracking-widest block text-left">{link}</button>
                 </li>
               ))}
             </ul>
@@ -81,10 +81,10 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
             </h4>
             <ul className="space-y-4">
               <li><button onClick={onContactSupport} className="text-white hover:text-amber-400 transition-colors text-xs font-black uppercase tracking-widest">Help Center</button></li>
-              <li className="text-white text-[11px] font-bold">+1 (416) 555-0198</li>
-              <li className="text-white text-[11px] font-bold">intel@exoticgta.io</li>
+              <li className="text-white text-[11px] font-bold group cursor-pointer" onClick={onContactSupport}>+1 (416) 555-0198</li>
+              <li className="text-white text-[11px] font-bold group cursor-pointer" onClick={onContactSupport}>intel@exoticgta.io</li>
               <li>
-                <button className="bg-amber-400 text-black text-[10px] font-black uppercase tracking-widest px-4 py-3 rounded-lg hover:bg-white transition-all w-full active:scale-95 shadow-lg">
+                <button onClick={onContactSupport} className="bg-amber-400 text-black text-[10px] font-black uppercase tracking-widest px-4 py-3 rounded-lg hover:bg-white transition-all w-full active:scale-95 shadow-lg">
                   Priority 24/7 Access
                 </button>
               </li>
@@ -96,11 +96,11 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
               <MapPin size={12} /> Regional Hubs
             </h4>
             <div className="space-y-6">
-              <div className="group cursor-pointer">
+              <div className="group cursor-pointer" onClick={onContactSupport}>
                 <p className="text-white text-[11px] font-black uppercase tracking-widest group-hover:text-amber-400 transition-colors">Vaughan Hub</p>
                 <p className="text-gray-500 text-[10px] mt-1 leading-tight">8800 Jane St, Vaughan, ON<br/>Logistics Secure Node</p>
               </div>
-              <div className="group cursor-pointer">
+              <div className="group cursor-pointer" onClick={onContactSupport}>
                 <p className="text-white text-[11px] font-black uppercase tracking-widest group-hover:text-amber-400 transition-colors">Downtown HQ</p>
                 <p className="text-gray-500 text-[10px] mt-1 leading-tight">Bay St Corridor, Toronto, ON<br/>Broker Compliance Desk</p>
               </div>

@@ -1,50 +1,71 @@
 
-import { TAX_RATE, TOTAL_FIXED_FEES } from './constants';
+import { TOTAL_FIXED_FEES } from './constants';
 import { Car, ProfitBreakdown } from './types';
 
 /**
- * Calculates high-fidelity profit modeling for the Toronto-US arbitrage corridor.
- * Now incorporates validated USMCA Regional Value Content (RVC) data.
+ * Lead Full-Stack Engineer / Trade Compliance Logic
+ * Implements CUSMA Tariff Engine (2026 Forecast) and Storage-Verified valuation.
  */
 export const calculateProfit = (car: Car, exchangeRate: number): ProfitBreakdown => {
-  const usdBasePrice = car.cadPrice * exchangeRate;
-  
-  // DATA INTEGRITY: Ensure usPartPercentage is a valid decimal between 0 and 1.
-  // This prevents malformed upstream data from skewing duty calculations.
-  const validatedUsPart = Math.max(0, Math.min(1, car.usPartPercentage ?? 0));
-  
-  // 2026 TARIFF LOGIC: VIN 1, 4, 5 = US Made (0% Duty)
-  // Others are subjected to the 25% Duty on the non-US originating portion of value.
-  const vin = car.vin || car.historyId;
-  const isUsMade = ['1', '4', '5'].includes(vin[0]);
-  
-  let taxAmount = 0;
-  let vinStatus: 'ZERO-TARIFF UNICORN' | 'FOREIGN (2026 RULE)' = 'FOREIGN (2026 RULE)';
+  // 1. Storage-Verified Logic
+  let winterDeduction = 0;
+  let storagePremium = 0;
+  let adjustedCadPrice = car.cadPrice;
 
-  if (isUsMade) {
-    taxAmount = 0;
-    vinStatus = 'ZERO-TARIFF UNICORN';
-  } else {
-    // Duty is applied to the portion of the vehicle's value that is NOT US-originating.
-    // We use (1 - validatedUsPart) to isolate the foreign value component.
-    const foreignPortion = 1 - validatedUsPart;
-    taxAmount = (usdBasePrice * foreignPortion) * TAX_RATE;
-    vinStatus = 'FOREIGN (2026 RULE)';
+  if (car.isWinterDriven) {
+    // PDF: 5-8% valuation deduction. We use midpoint 6.5%.
+    winterDeduction = car.cadPrice * 0.065;
+    adjustedCadPrice -= winterDeduction;
   }
 
-  const totalCostUsd = usdBasePrice + taxAmount + TOTAL_FIXED_FEES;
+  if (car.hasHeatedStorage) {
+    // PDF: +4% premium for documented heated storage.
+    storagePremium = car.cadPrice * 0.04;
+    adjustedCadPrice += storagePremium;
+  }
+
+  // 2. Base Conversion (2026 Forecast Exchange)
+  const usdBasePrice = adjustedCadPrice * exchangeRate;
+  
+  // 3. CUSMA Tariff Engine
+  // PDF: Checks first digit (1, 2, 4, 5). 1, 4, 5 = USA; 2 = Canada (CUSMA Zone)
+  const vin = (car.vin || car.historyId || '').trim();
+  const firstDigit = vin[0];
+  const isCusmaZone = ['1', '2', '4', '5'].includes(firstDigit);
+  
+  let tariffAmount = 0;
+  if (!isCusmaZone) {
+    // Standard Tariff applied to non-CUSMA vehicles (e.g. European origin)
+    // Applying a conservative 20% value delta for non-USMCA 2026 rules
+    tariffAmount = usdBasePrice * 0.25;
+  }
+
+  // 4. US Luxury Tax (PDF: 10% of total vs 20% of value over $100k)
+  const totalBeforeLuxuryTax = usdBasePrice + tariffAmount + TOTAL_FIXED_FEES;
+  const luxuryTaxOptionA = totalBeforeLuxuryTax * 0.10;
+  const luxuryTaxOptionB = totalBeforeLuxuryTax > 100000 
+    ? (totalBeforeLuxuryTax - 100000) * 0.20 
+    : 0;
+  
+  // We use the higher tax as per "vs" comparison logic in trade compliance
+  const luxuryTaxAmount = Math.max(luxuryTaxOptionA, luxuryTaxOptionB);
+
+  const totalCostUsd = totalBeforeLuxuryTax + luxuryTaxAmount;
   const netProfit = car.expectedUsResale - totalCostUsd;
   
-  const isHighYield = netProfit > 20000;
+  const isHighYield = netProfit > 25000;
 
   return {
     usdBasePrice,
-    taxAmount,
+    taxAmount: tariffAmount,
+    luxuryTaxAmount,
     fixedFees: TOTAL_FIXED_FEES,
     totalCostUsd,
     netProfit,
     isHighYield,
-    vinStatus
+    vinStatus: isCusmaZone ? 'CUSMA ELIGIBLE' : 'FOREIGN (TARIFF APPLIED)',
+    winterDeduction,
+    storagePremium
   };
 };
 
@@ -57,8 +78,7 @@ export const formatCurrency = (amount: number, currency: string = 'USD') => {
 };
 
 export const getMarketConfidence = (daysOnMarket: number, profit: number): number => {
-  // 100M Logic: High profit + low days on market = high confidence score
-  const profitScore = Math.min(profit / 500, 50); // Max 50 points from profit
-  const speedScore = Math.max(50 - daysOnMarket * 2, 0); // Max 50 points from speed
+  const profitScore = Math.min(profit / 500, 50); 
+  const speedScore = Math.max(50 - daysOnMarket * 2, 0); 
   return Math.round(profitScore + speedScore);
 };
