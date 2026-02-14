@@ -18,8 +18,8 @@
         --ms-azure-dark: #005a9e;
         --ms-azure-light: #2b88d8;
         --ticker-bg: var(--ms-azure);
-        --bg-main: #05070a; /* Executive Onyx */
-        --bg-card: rgba(13, 17, 23, 0.8);
+        --bg-main: #0f172a; /* Executive Slate - Lightened from Onyx */
+        --bg-card: rgba(30, 41, 59, 0.7); /* Deep Slate Glass */
       }
       
       * {
@@ -28,6 +28,7 @@
 
       body {
         background-color: var(--bg-main);
+        background-image: radial-gradient(circle at 50% 0%, rgba(30, 58, 138, 0.1) 0%, transparent 50%);
         margin: 0;
         overflow-x: hidden;
         color: white;
@@ -36,8 +37,8 @@
       .glass-card {
         background: var(--bg-card);
         backdrop-filter: blur(24px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.6);
       }
 
       .ticker-wrap {
@@ -76,14 +77,17 @@
       ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: var(--bg-main); }
       ::-webkit-scrollbar-thumb { 
-        background: #252a33; 
+        background: #334155; 
         border-radius: 10px;
         border: 2px solid var(--bg-main);
       }
       
-      /* Smooth transitions for interactive elements */
       .premium-hover {
         transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .risk-meter-segment {
+        transition: all 0.5s ease;
       }
     </style>
     <script type="importmap">

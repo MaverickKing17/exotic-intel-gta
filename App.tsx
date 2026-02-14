@@ -18,7 +18,7 @@ import {
   Truck, ShieldCheck, MapPin, FileText, CheckCircle2, 
   TrendingUp, BarChart3, AlertCircle, Ship, Landmark,
   Clock, Database, MessageSquareText, Sparkles, Activity,
-  Info, Loader2, Map as MapIcon
+  Info, Loader2, Map as MapIcon, Shield
 } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -123,7 +123,7 @@ const App: React.FC = () => {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <h2 className="text-white text-4xl font-black uppercase tracking-tighter">GTA-US Logistics Command</h2>
-                <p className="text-gray-500 text-sm mt-1 font-medium">Real-time status of the Toronto-Miami export corridor.</p>
+                <p className="text-gray-400 text-sm mt-1 font-medium">Real-time status of the Toronto-Miami export corridor.</p>
               </div>
               <div className="flex items-center gap-2 px-6 py-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl">
                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -202,7 +202,7 @@ const App: React.FC = () => {
           <div className="space-y-12 animate-in fade-in slide-in-from-bottom-6 duration-700">
             <h2 className="text-white text-4xl font-black uppercase tracking-tighter">Regulatory & Audit Desk</h2>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-              <div className="lg:col-span-2 glass-card p-14 rounded-[4rem] space-y-12">
+              <div className="lg:col-span-2 glass-card p-14 rounded-[4rem] space-y-12 bg-slate-800/40">
                 <div className="flex items-center gap-8 p-10 bg-blue-500/5 border border-blue-500/20 rounded-[3rem]">
                   <div className="w-16 h-16 rounded-3xl bg-blue-500/20 flex items-center justify-center text-blue-400">
                     <ShieldCheck size={48} />
@@ -214,14 +214,14 @@ const App: React.FC = () => {
                 </div>
                 
                 <div className="space-y-8">
-                  <h3 className="text-white text-[11px] font-black uppercase tracking-[0.4em] text-gray-500 px-2">Compliance Nodes</h3>
+                  <h3 className="text-white text-[11px] font-black uppercase tracking-[0.4em] text-gray-400 px-2">Compliance Nodes</h3>
                   {[
                     { label: 'OMVIC Dealer License Registry', status: 'Authenticated', date: '2025-05-14' },
                     { label: 'CBP Form 7501 Automation Node', status: 'Ready', date: '2025-05-15' },
                     { label: 'Ontario UVIP Data Verification', status: 'Nominal', date: '2025-05-15' },
                     { label: 'EPA/DOT Standards Validation', status: 'Active', date: '2025-05-15' }
                   ].map((c, i) => (
-                    <div key={i} className="flex justify-between items-center p-6 bg-white/5 rounded-[2rem] border border-white/5 hover:border-white/20 transition-all cursor-pointer group" onClick={() => showToast(`Audit: ${c.label} status re-confirmed.`)}>
+                    <div key={i} className="flex justify-between items-center p-6 bg-slate-900/60 rounded-[2rem] border border-white/5 hover:border-white/20 transition-all cursor-pointer group" onClick={() => showToast(`Audit: ${c.label} status re-confirmed.`)}>
                       <div className="flex items-center gap-6">
                         <CheckCircle2 className="text-emerald-500 group-hover:scale-110 transition-transform" size={24} />
                         <div>
@@ -236,24 +236,62 @@ const App: React.FC = () => {
               </div>
               
               <div className="flex flex-col gap-8">
-                <div className="glass-card p-10 rounded-[3rem] bg-amber-400/5 border-amber-400/20">
-                  <AlertCircle className="text-amber-400 mb-8" size={40} />
-                  <h3 className="text-white text-2xl font-black mb-6 tracking-tight">Risk Monitoring</h3>
-                  <div className="space-y-8">
-                    <div className="p-6 bg-black/40 rounded-2xl border border-white/5">
-                      <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-3">Border Enforcement Level</p>
-                      <div className="flex items-center gap-6">
-                        <div className="flex-1 bg-white/10 h-3 rounded-full overflow-hidden">
-                          <div className="bg-emerald-500 h-full w-[25%] shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                        </div>
-                        <span className="text-emerald-500 text-sm font-black tracking-widest">LOW</span>
+                {/* Redesigned Risk Monitoring Section */}
+                <div className="glass-card p-10 rounded-[3rem] border-white/10 shadow-2xl relative overflow-hidden bg-slate-900/60">
+                  <div className="absolute top-0 right-0 p-4 opacity-10">
+                    <Shield size={120} className="text-white" />
+                  </div>
+                  
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="p-3 bg-rose-500/10 rounded-2xl border border-rose-500/20 text-rose-500">
+                      <AlertCircle size={28} />
+                    </div>
+                    <div className="text-right">
+                       <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/10 px-2 py-1 rounded">Secured System</span>
+                    </div>
+                  </div>
+
+                  <h3 className="text-white text-2xl font-black mb-6 tracking-tighter uppercase">Risk Monitoring</h3>
+                  
+                  <div className="space-y-8 relative z-10">
+                    <div className="p-6 bg-black/40 rounded-2xl border border-white/5 shadow-inner">
+                      <div className="flex justify-between items-center mb-4">
+                        <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">Border Enforcement Level</p>
+                        <span className="text-emerald-400 text-[10px] font-black uppercase tracking-widest">Low</span>
                       </div>
+                      
+                      {/* Segmented meter visualization */}
+                      <div className="flex gap-1.5 h-3">
+                        {[...Array(10)].map((_, i) => (
+                          <div 
+                            key={i} 
+                            className={`flex-1 rounded-sm risk-meter-segment ${i < 3 ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-white/10'}`} 
+                          />
+                        ))}
+                      </div>
+                      
+                      <div className="flex justify-between mt-3 text-[8px] font-black uppercase text-gray-600 tracking-widest">
+                        <span>Lvl 0</span>
+                        <span>Lvl 10</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 text-gray-500 text-[10px] font-black uppercase tracking-widest">
+                      <Clock size={14} className="text-amber-400" />
+                      Last Neural Scan: <span className="text-white font-mono">1.4s ago</span>
                     </div>
                   </div>
                 </div>
-                <button onClick={handleDownloadPack} disabled={isDownloadingPack} className="w-full py-6 bg-white text-black text-xs font-black uppercase tracking-[0.3em] rounded-[2rem] hover:bg-amber-400 transition-all active:scale-95 shadow-2xl flex items-center justify-center gap-3 disabled:opacity-50">
-                  {isDownloadingPack ? <Loader2 size={18} className="animate-spin" /> : <FileText size={18} />}
-                  {isDownloadingPack ? "Generating..." : "Download Audit Pack"}
+
+                {/* Redesigned Download Button - Executive Style */}
+                <button 
+                  onClick={handleDownloadPack} 
+                  disabled={isDownloadingPack} 
+                  className="group w-full py-6 bg-amber-400 text-black text-xs font-black uppercase tracking-[0.3em] rounded-[2.5rem] hover:bg-white hover:scale-[1.02] transition-all duration-300 active:scale-95 shadow-[0_20px_50px_rgba(251,191,36,0.3)] flex items-center justify-center gap-4 disabled:opacity-50 relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  {isDownloadingPack ? <Loader2 size={20} className="animate-spin" /> : <FileText size={20} className="group-hover:rotate-[10deg] transition-transform" />}
+                  <span className="relative z-10">{isDownloadingPack ? "Generating..." : "Download Audit Pack"}</span>
                 </button>
               </div>
             </div>
@@ -316,7 +354,7 @@ const App: React.FC = () => {
                   <button 
                     key={f}
                     onClick={() => setActiveFilter(f)}
-                    className={`px-10 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all cursor-pointer active:scale-95 ${activeFilter === f ? 'bg-white text-black shadow-2xl' : 'text-gray-500 hover:text-white'}`}
+                    className={`px-10 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all cursor-pointer active:scale-95 ${activeFilter === f ? 'bg-white text-black shadow-2xl' : 'text-gray-400 hover:text-white'}`}
                   >
                     {f.replace('_', ' ')}
                   </button>
@@ -342,7 +380,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#05070a] selection:bg-amber-400 selection:text-black flex flex-col transition-colors duration-500">
+    <div className="min-h-screen bg-[#0f172a] selection:bg-amber-400 selection:text-black flex flex-col transition-colors duration-500">
       <MoneyTicker totalProfit={totalMarketProfit} exchangeRate={exchangeRate} location={userHub} />
 
       {/* Neural Toast Hub */}
@@ -359,7 +397,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <nav className="w-full bg-[#05070a]/90 border-b border-white/5 sticky top-[48px] z-[100] shadow-2xl backdrop-blur-xl">
+      <nav className="w-full bg-[#0f172a]/90 border-b border-white/5 sticky top-[48px] z-[100] shadow-2xl backdrop-blur-xl">
         <div className="max-w-[1700px] mx-auto px-10 py-6 flex items-center justify-between">
           <div className="flex items-center gap-16">
             <div className="flex items-center gap-3 group cursor-pointer" onClick={(e) => handleNavLinkClick(e, 'INVENTORY')}>
