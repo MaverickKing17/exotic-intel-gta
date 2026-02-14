@@ -18,7 +18,7 @@ export const MOCK_CARS: any[] = [
     cadPrice: 145000,
     isNorthAmerican: true,
     usPartPercentage: 0.85,
-    image: 'https://images.unsplash.com/photo-1590050772274-1232870425cc?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1620002093398-8f16081af5ee?auto=format&fit=crop&q=80&w=1200',
     speedToSale: 4,
     historyId: 'EIGTA-7722-X',
     expectedUsResale: 145000
