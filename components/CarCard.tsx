@@ -14,10 +14,13 @@ interface CarCardProps {
   onFilterSelect?: (filter: string) => void;
 }
 
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=1200';
+
 export const CarCard: React.FC<CarCardProps> = ({ car, exchangeRate, onAction, onChat }) => {
   const [marketComp, setMarketComp] = useState<MarketComp | null>(null);
   const [isLeading, setIsLeading] = useState(false);
   const [leadStatus, setLeadStatus] = useState<'IDLE' | 'SUCCESS'>('IDLE');
+  const [imgSrc, setImgSrc] = useState(car.image);
   
   const profit = calculateProfit(car, exchangeRate);
   
@@ -29,6 +32,10 @@ export const CarCard: React.FC<CarCardProps> = ({ car, exchangeRate, onAction, o
     getComps();
   }, [car]);
 
+  useEffect(() => {
+    setImgSrc(car.image);
+  }, [car.image]);
+
   const handleQualifyLead = async () => {
     setIsLeading(true);
     const success = await submitAlexLead(car, profit.netProfit);
@@ -37,6 +44,10 @@ export const CarCard: React.FC<CarCardProps> = ({ car, exchangeRate, onAction, o
       setTimeout(() => setLeadStatus('IDLE'), 3000);
     }
     setIsLeading(false);
+  };
+
+  const handleImageError = () => {
+    setImgSrc(FALLBACK_IMAGE);
   };
 
   const confidenceScore = marketComp ? getMarketConfidence(marketComp.days_on_market, profit.netProfit) : 0;
@@ -58,7 +69,12 @@ export const CarCard: React.FC<CarCardProps> = ({ car, exchangeRate, onAction, o
       </div>
 
       <div className="relative h-60 overflow-hidden bg-slate-900">
-        <img src={car.image} alt={car.model} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+        <img 
+          src={imgSrc} 
+          alt={car.model} 
+          onError={handleImageError}
+          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
         
         <div className="absolute top-5 left-5 flex flex-wrap gap-2">
