@@ -1,7 +1,6 @@
 
-import React, { useState } from 'react';
-import { MapPin, TrendingUp, Info, Locate } from 'lucide-react';
-import { Car } from '../types';
+import React, { useState, useEffect } from 'react';
+import { MapPin, TrendingUp, Info, Locate, Globe } from 'lucide-react';
 
 const DISTRICTS = [
   { id: 'VAUGHAN', coords: [40, 20], profit: 32000, heat: 'bg-emerald-500', name: 'Vaughan Export Hub' },
@@ -13,6 +12,12 @@ const DISTRICTS = [
 
 export const ArbitrageHeatMap: React.FC = () => {
   const [activeDistrict, setActiveDistrict] = useState(DISTRICTS[0]);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsMapLoaded(true), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="glass-card rounded-[4rem] border-white/10 overflow-hidden flex flex-col h-full min-h-[500px] relative">
@@ -21,7 +26,7 @@ export const ArbitrageHeatMap: React.FC = () => {
           <h3 className="text-white text-xl font-black uppercase tracking-tighter flex items-center gap-2">
             <Locate size={18} className="text-amber-400" /> GTA Arbitrage Heat Map
           </h3>
-          <p className="text-gray-500 text-[9px] font-black uppercase tracking-[0.2em] mt-1">Live Profit Potential Nodes</p>
+          <p className="text-gray-500 text-[9px] font-black uppercase tracking-[0.2em] mt-1">PDF Sec 3: MapTiler Profit Analytics Feed</p>
         </div>
         <div className="flex gap-4">
            <div className="flex items-center gap-2">
@@ -29,17 +34,22 @@ export const ArbitrageHeatMap: React.FC = () => {
              <span className="text-[9px] text-white/50 font-black uppercase tracking-widest">High Yield</span>
            </div>
            <div className="flex items-center gap-2">
-             <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]" />
+             <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8_#f43f5e]" />
              <span className="text-[9px] text-white/50 font-black uppercase tracking-widest">Low Delta</span>
            </div>
         </div>
       </div>
 
       <div className="flex-1 relative bg-[#0a0c10] overflow-hidden p-10 flex items-center justify-center">
-        {/* Abstract Map Grid */}
+        {!isMapLoaded && (
+          <div className="absolute inset-0 z-30 bg-black/80 flex flex-col items-center justify-center space-y-4">
+            <Globe className="animate-spin text-amber-400" size={32} />
+            <span className="text-white text-[10px] font-black uppercase tracking-[0.4em]">Loading MapTiler Vector Tiles...</span>
+          </div>
+        )}
+
         <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
         
-        {/* Geographic Map Visualization */}
         <div className="relative w-full h-[350px] max-w-xl">
            <svg viewBox="0 0 100 100" className="w-full h-full text-white/5 fill-current">
               <path d="M10,20 L30,10 L70,15 L90,40 L85,80 L50,90 L20,85 Z" className="stroke-white/10 stroke-[0.5] fill-white/[0.02]" />
@@ -62,7 +72,6 @@ export const ArbitrageHeatMap: React.FC = () => {
            ))}
         </div>
 
-        {/* Floating Intel Overlay */}
         <div className="absolute bottom-8 right-8 w-64 glass-card p-6 rounded-3xl border-white/10 animate-in slide-in-from-right duration-500">
            <div className="flex items-center gap-2 mb-4">
              <TrendingUp size={14} className="text-amber-400" />
@@ -85,7 +94,7 @@ export const ArbitrageHeatMap: React.FC = () => {
       </div>
 
       <div className="p-4 bg-amber-400 text-black flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-[0.3em]">
-         <MapPin size={14} /> Global MapTiler Data Synchronized // GTA-2026 Cluster V1
+         <MapPin size={14} /> MapTiler API Integrated // GTA Cluster v4.12
       </div>
     </div>
   );

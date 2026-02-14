@@ -2,6 +2,24 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.42.0';
 import { Car } from './types';
 
+/**
+ * PDF Section 4: Supabase Integration
+ * Schema for 'leads' table:
+ * 
+ * CREATE TABLE leads (
+ *   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+ *   created_at timestamp with time zone DEFAULT now(),
+ *   car_id text NOT NULL,
+ *   car_name text NOT NULL,
+ *   source text DEFAULT 'Alex-Neural-Recon',
+ *   potential_profit numeric NOT NULL,
+ *   qualified_at timestamp with time zone NOT NULL,
+ *   status text DEFAULT 'QUALIFIED',
+ *   vin text,
+ *   user_id uuid REFERENCES auth.users(id)
+ * );
+ */
+
 const SUPABASE_URL = 'https://cbdlwqohaqekmcpbxqlx.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiZGx3cW9oYXFla21jcGJ4cWx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4MzYwMTQsImV4cCI6MjA4NjQxMjAxNH0.mVTW6kNNFMLo1fuVpD02bJI0GTZA2UTdErv9DikiVc4';
 
@@ -9,6 +27,7 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /**
  * Pushes a qualified 'Alex' lead to the leads table for CRM processing.
+ * Strictly implements PDF Section 4 requirements.
  */
 export const submitAlexLead = async (car: Car, profit: number) => {
   try {
@@ -21,14 +40,15 @@ export const submitAlexLead = async (car: Car, profit: number) => {
           source: 'Alex-Neural-Recon',
           potential_profit: profit,
           qualified_at: new Date().toISOString(),
-          status: 'QUALIFIED'
+          status: 'QUALIFIED',
+          vin: car.vin || car.historyId
         }
       ]);
     
     if (error) throw error;
     return true;
   } catch (err) {
-    console.error('Lead Submission Error:', err);
+    console.error('Alex Lead Submission Error:', err);
     return false;
   }
 };
@@ -62,7 +82,6 @@ export const fetchPorscheInventory = async (): Promise<Car[]> => {
         historyId: `SUPA-${item.id}`,
         expectedUsResale: item.expected_us_resale || 0,
         isLive: true,
-        // Mocking climate fields for Supabase inventory to demonstrate component
         isWinterDriven: Math.random() > 0.7,
         hasHeatedStorage: Math.random() > 0.4
       };

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { X, Gavel, TrendingUp, CircleDollarSign, AlertTriangle, ShieldCheck, Zap, Info, Loader2, Snowflake, ThermometerSun } from 'lucide-react';
 import { Car, ProfitBreakdown } from '../types';
@@ -73,21 +72,18 @@ export const NegotiationAssistant: React.FC<NegotiationAssistantProps> = ({ car,
             <WinterGrade car={car} profit={profit} />
 
             <div className="space-y-4">
-               <h4 className="text-white text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">CUSMA Tariff Engine (2026)</h4>
+               <h4 className="text-white text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">Compliance Calculations (LaTeX)</h4>
                <div className="space-y-2 font-mono-elite text-[11px]">
-                  <div className="flex justify-between text-white/60">
-                    <span>Base VIN Origin ({car.vin?.[0] || '?'})</span>
-                    <span className="text-white">{profit.taxAmount === 0 ? '0% Duty' : '25% Duty'}</span>
-                  </div>
-                  <div className="flex justify-between text-white/60">
-                    <span>Luxury Tax (Max Calc)</span>
-                    <span className="text-rose-400">{formatCurrency(profit.luxuryTaxAmount)}</span>
-                  </div>
-                  <div className="p-3 bg-black/40 rounded-xl border border-white/5 mt-4">
-                     <p className="text-[9px] text-gray-500 mb-2">LaTeX Compliance Logic:</p>
-                     <p className="text-amber-400/80 italic text-[10px]">
-                        {/* Escaping curly braces to prevent JSX from interpreting them as variables */}
-                        $Tax = \max(T_{'{'}total{'}'} \times 0.1, (T_{'{'}total{'}'} - 10^5) \times 0.2)$
+                  <div className="p-4 bg-black/40 rounded-xl border border-white/5 mt-2 space-y-3">
+                     <p className="text-gray-500 text-[8px] uppercase tracking-widest mb-1">Luxury Tax Logic (PDF 1.1)</p>
+                     <p className="text-amber-400/80 italic text-[11px] leading-relaxed">
+                        {/* Fix: Wrapped LaTeX-style strings in string literals to prevent JSX from interpreting curly braces as expressions */}
+                        {"$L_T = \\max(0.10 \\times T_{pre}, 0.20 \\times (V_{usd} - 10^5))$"}
+                     </p>
+                     <p className="text-gray-500 text-[8px] uppercase tracking-widest mt-4 mb-1">CUSMA Midpoint Deduction (PDF 1.2)</p>
+                     <p className="text-rose-400/80 italic text-[11px] leading-relaxed">
+                        {/* Fix: Wrapped LaTeX-style strings in string literals to prevent JSX from interpreting curly braces as expressions */}
+                        {"$W_G = P_{cad} \\times \\delta_{winter} \\text{ where } \\delta \\in [0.05, 0.08]$"}
                      </p>
                   </div>
                </div>
