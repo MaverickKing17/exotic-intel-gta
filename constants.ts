@@ -51,16 +51,16 @@ export const MOCK_CARS: any[] = [
   },
   {
     id: '4',
-    make: 'Lucid',
-    model: 'Air Sapphire',
+    make: 'McLaren',
+    model: '750S Spider',
     year: 2024,
-    cadPrice: 320000,
-    isNorthAmerican: true,
-    usPartPercentage: 0.90,
-    image: 'https://images.unsplash.com/photo-1621360841013-c7683c659ec6?auto=format&fit=crop&q=80&w=1200',
-    speedToSale: 15,
-    historyId: 'EIGTA-8821-L',
-    expectedUsResale: 310000
+    cadPrice: 425000,
+    isNorthAmerican: false,
+    usPartPercentage: 0,
+    image: 'https://images.unsplash.com/photo-1594731825741-86088b9cc025?auto=format&fit=crop&q=80&w=1200',
+    speedToSale: 18,
+    historyId: 'S-GTA-8821-M', // Starts with S (British) to trigger Foreign Tariff logic
+    expectedUsResale: 410000
   },
   {
     id: '5',
