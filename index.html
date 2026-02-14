@@ -18,24 +18,26 @@
         --ms-azure-dark: #005a9e;
         --ms-azure-light: #2b88d8;
         --ticker-bg: var(--ms-azure);
+        --bg-main: #05070a; /* Executive Onyx */
+        --bg-card: rgba(13, 17, 23, 0.8);
       }
       
       * {
-        /* Strictly enforcing Microsoft Segoe UI font stack globally */
         font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif !important;
       }
 
       body {
-        background-color: #1c1f26;
+        background-color: var(--bg-main);
         margin: 0;
         overflow-x: hidden;
         color: white;
       }
 
       .glass-card {
-        background: rgba(30, 34, 45, 0.85);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: var(--bg-card);
+        backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
       }
 
       .ticker-wrap {
@@ -56,12 +58,10 @@
         100% { transform: translateX(-50%); }
       }
 
-      /* Microsoft Consolas for mono elements */
       .font-mono-elite {
         font-family: "Consolas", "Monaco", "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace !important;
       }
 
-      /* Floating Chat Button Pulse */
       .chat-pulse {
         box-shadow: 0 0 0 0 rgba(251, 184, 0, 0.7);
         animation: chat-pulse-anim 2s infinite;
@@ -73,9 +73,18 @@
         100% { box-shadow: 0 0 0 0 rgba(251, 184, 0, 0); }
       }
 
-      ::-webkit-scrollbar { width: 6px; }
-      ::-webkit-scrollbar-track { background: #1c1f26; }
-      ::-webkit-scrollbar-thumb { background: #333945; border-radius: 10px; }
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: var(--bg-main); }
+      ::-webkit-scrollbar-thumb { 
+        background: #252a33; 
+        border-radius: 10px;
+        border: 2px solid var(--bg-main);
+      }
+      
+      /* Smooth transitions for interactive elements */
+      .premium-hover {
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
     </style>
     <script type="importmap">
     {

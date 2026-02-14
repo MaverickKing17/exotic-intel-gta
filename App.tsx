@@ -342,7 +342,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1c1f26] selection:bg-amber-400 selection:text-black flex flex-col transition-colors duration-500">
+    <div className="min-h-screen bg-[#05070a] selection:bg-amber-400 selection:text-black flex flex-col transition-colors duration-500">
       <MoneyTicker totalProfit={totalMarketProfit} exchangeRate={exchangeRate} location={userHub} />
 
       {/* Neural Toast Hub */}
@@ -359,7 +359,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <nav className="w-full bg-[#1c1f26]/95 border-b border-white/5 sticky top-[48px] z-[100] shadow-2xl backdrop-blur-xl">
+      <nav className="w-full bg-[#05070a]/90 border-b border-white/5 sticky top-[48px] z-[100] shadow-2xl backdrop-blur-xl">
         <div className="max-w-[1700px] mx-auto px-10 py-6 flex items-center justify-between">
           <div className="flex items-center gap-16">
             <div className="flex items-center gap-3 group cursor-pointer" onClick={(e) => handleNavLinkClick(e, 'INVENTORY')}>
