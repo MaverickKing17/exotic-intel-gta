@@ -7,36 +7,45 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+/**
+ * Fetches the latest Porsche inventory from the private Supabase node.
+ * Maps high-fidelity data including VIN and market-specific metadata.
+ */
 export const fetchPorscheInventory = async (): Promise<Car[]> => {
   try {
     const { data, error } = await supabase
       .from('inventory')
-      .select('*')
+      .select('id, make, model, year, price_cad, vin, image_url, demand_score, expected_us_resale')
       .eq('make', 'Porsche')
       .order('created_at', { ascending: false })
-      .limit(5);
+      .limit(10); // Expanded limit for deeper market analysis
 
     if (error) throw error;
 
-    // Map Supabase schema to our Car type
-    return (data || []).map((item: any) => ({
-      id: item.id.toString(),
-      make: item.make,
-      model: item.model,
-      year: item.year || 2024,
-      cadPrice: item.price_cad || 0,
-      vin: item.vin || 'UNKNOWN',
-      // Determine origin based on VIN logic for the type system
-      isNorthAmerican: ['1', '4', '5'].includes(item.vin?.[0]),
-      usPartPercentage: 0.85, 
-      image: item.image_url || 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=1200',
-      speedToSale: item.demand_score || 10,
-      historyId: `SUPA-${item.id}`,
-      expectedUsResale: item.expected_us_resale || 0,
-      isLive: true // Flag for UI distinction
-    }));
+    // Map Supabase schema to our elite Car interface with explicit VIN translation
+    return (data || []).map((item: any) => {
+      const vinValue = item.vin || '';
+      
+      return {
+        id: item.id.toString(),
+        make: item.make,
+        model: item.model,
+        year: item.year || 2024,
+        cadPrice: item.price_cad || 0,
+        vin: vinValue,
+        // USMCA Intelligence: VINs starting with 1, 2, 3, 4, or 5 indicate North American assembly
+        // (1, 4, 5 = USA; 2 = Canada; 3 = Mexico)
+        isNorthAmerican: /^[1-5]/.test(vinValue),
+        usPartPercentage: 0.85, 
+        image: item.image_url || 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=1200',
+        speedToSale: item.demand_score || 10,
+        historyId: `SUPA-${item.id}`,
+        expectedUsResale: item.expected_us_resale || 0,
+        isLive: true // UI distinction for real-time inventory
+      };
+    });
   } catch (error) {
-    console.error('Supabase Fetch Error:', error);
+    console.error('Supabase Inventory Sync Failure:', error);
     return [];
   }
 };
