@@ -8,19 +8,11 @@ import {
 } from 'lucide-react';
 
 interface FooterProps {
-  onShowLegal: (title: string, content: string) => void;
+  onShowContent: (title: string) => void;
   onContactSupport: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport }) => {
-  const legalData = {
-    'Privacy Policy': 'Exotic Intel (EI) uses high-level encryption for all your data. This includes dealer licenses and private car history. Our Toronto data centers keep your information safe and local. We delete transaction data every 24 hours to keep your trades secret.',
-    'Terms of Service': 'This platform is for active luxury car brokers in the Toronto area only. By using our real-time feed, you agree to keep our profit calculations private. We may remove access for any unauthorized use of our data.',
-    'Sitemap': 'Quick access to all EI points: Vaughan Hub, Toronto Desk, Border Portals, and Miami Market updates. Includes full access to all data logs and manuals.',
-    'Data Security': 'Our Vaughan hub is protected by biometric locks. Every profit signal we send is verified to prevent fake market data. We guarantee 100% uptime for brokers watching fast-moving exchange rates.',
-    'Cookie Policy': 'We only use cookies to keep your account secure. We save your search preferences locally on your device. We never share your data with advertisers.'
-  };
-
+export const Footer: React.FC<FooterProps> = ({ onShowContent, onContactSupport }) => {
   const socialLinks = [
     { 
       Icon: Instagram, 
@@ -62,7 +54,7 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
           {/* Brand & Realistic Socials */}
           <div className="lg:col-span-1 space-y-12">
             <div className="space-y-8">
-              <div className="flex items-center gap-4 group cursor-pointer" onClick={onContactSupport}>
+              <div className="flex items-center gap-4 group cursor-pointer" onClick={() => onShowContent('Sitemap')}>
                 <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(255,255,255,0.15)] transition-all group-hover:scale-110 duration-500">
                   <Gem size={32} className="text-black" />
                 </div>
@@ -78,7 +70,7 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
               {socialLinks.map(({ Icon, color, glow, label, brand }) => (
                 <button
                   key={label}
-                  onClick={onContactSupport}
+                  onClick={() => onShowContent(`Social Link: ${label}`)}
                   aria-label={label}
                   className={`w-14 h-14 flex items-center justify-center rounded-[1.25rem] bg-white/[0.05] border border-white/[0.12] text-gray-200 transition-all duration-500 ${color} ${glow} hover:bg-black/40 hover:scale-115 active:scale-90 group relative`}
                 >
@@ -98,7 +90,7 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
             <ul className="space-y-5">
               {['Live Car Feed', 'Auction Intel', 'Dealer Solutions', 'Developer API', 'Toronto Portal'].map((link) => (
                 <li key={link}>
-                  <button onClick={onContactSupport} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest block text-left premium-hover hover:translate-x-2">{link}</button>
+                  <button onClick={() => onShowContent(link)} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest block text-left premium-hover hover:translate-x-2">{link}</button>
                 </li>
               ))}
             </ul>
@@ -111,7 +103,7 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
             <ul className="space-y-5">
               {['OMVIC Registry', 'CUSMA Clearance', 'Audit Logs', 'VIN History', 'Export Permits'].map((link) => (
                 <li key={link}>
-                  <button onClick={onContactSupport} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest block text-left premium-hover hover:translate-x-2">{link}</button>
+                  <button onClick={() => onShowContent(link)} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest block text-left premium-hover hover:translate-x-2">{link}</button>
                 </li>
               ))}
             </ul>
@@ -122,11 +114,11 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
               <LifeBuoy size={16} /> Help Desk
             </h4>
             <ul className="space-y-5">
-              <li><button onClick={onContactSupport} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest premium-hover hover:translate-x-2">Help Center</button></li>
+              <li><button onClick={() => onShowContent('Help Center')} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest premium-hover hover:translate-x-2">Help Center</button></li>
               <li className="text-white text-sm font-black">+1 (416) 555-0198</li>
               <li className="text-white text-sm font-black">support@exoticintel.io</li>
               <li className="pt-4">
-                <button onClick={onContactSupport} className="bg-amber-400 text-black text-[11px] font-black uppercase tracking-[0.3em] px-8 py-5 rounded-2xl hover:bg-white transition-all w-full active:scale-95 shadow-xl shadow-amber-400/20">
+                <button onClick={() => onShowContent('Priority Support')} className="bg-amber-400 text-black text-[11px] font-black uppercase tracking-[0.3em] px-8 py-5 rounded-2xl hover:bg-white transition-all w-full active:scale-95 shadow-xl shadow-amber-400/20">
                   Priority Support
                 </button>
               </li>
@@ -138,11 +130,11 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
               <MapPin size={16} /> Hub Locations
             </h4>
             <div className="space-y-8">
-              <div className="group cursor-pointer premium-hover hover:translate-x-2" onClick={onContactSupport}>
+              <div className="group cursor-pointer premium-hover hover:translate-x-2" onClick={() => onShowContent('Vaughan Hub')}>
                 <p className="text-white text-xs font-black uppercase tracking-widest group-hover:text-amber-400 transition-colors">Vaughan Hub</p>
                 <p className="text-gray-500 text-[11px] mt-2 leading-relaxed">Jane St Corridor, Vaughan<br/>Secure Logistics Node</p>
               </div>
-              <div className="group cursor-pointer premium-hover hover:translate-x-2" onClick={onContactSupport}>
+              <div className="group cursor-pointer premium-hover hover:translate-x-2" onClick={() => onShowContent('Toronto HQ')}>
                 <p className="text-white text-xs font-black uppercase tracking-widest group-hover:text-amber-400 transition-colors">Toronto HQ</p>
                 <p className="text-gray-500 text-[11px] mt-2 leading-relaxed">Bay St Financial District<br/>Compliance Center</p>
               </div>
@@ -169,7 +161,7 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
             ].map((item) => (
               <button 
                 key={item.label} 
-                onClick={() => onShowLegal(item.label, (legalData as any)[item.label])}
+                onClick={() => onShowContent(item.label)}
                 className="flex items-center gap-2.5 text-gray-400 hover:text-amber-400 transition-all text-[11px] font-black uppercase tracking-[0.1em] group"
               >
                 <item.icon size={16} className="text-amber-400 transition-transform group-hover:scale-125 duration-300" />

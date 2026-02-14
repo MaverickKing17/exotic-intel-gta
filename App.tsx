@@ -18,7 +18,7 @@ import {
   Truck, ShieldCheck, MapPin, FileText, CheckCircle2, 
   TrendingUp, BarChart3, AlertCircle, Ship, Landmark,
   Clock, Database, MessageSquareText, Sparkles, Activity,
-  Info, Loader2, Map as MapIcon, Shield
+  Info, Loader2, Map as MapIcon, Shield, Lock, HelpCircle
 } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -28,12 +28,43 @@ const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [exchangeRate, setExchangeRate] = useState(0.734);
-  const [legalModal, setLegalModal] = useState<{title: string, content: string} | null>(null);
+  const [infoModal, setInfoModal] = useState<{title: string, content: string} | null>(null);
   const [currentView, setCurrentView] = useState<'INVENTORY' | 'LOGISTICS' | 'COMPLIANCE' | 'REPORTS'>('INVENTORY');
   const [userHub, setUserHub] = useState('TORONTO HUB');
   const [borderStats, setBorderStats] = useState<BorderStatus[]>([]);
   const [isDownloadingPack, setIsDownloadingPack] = useState(false);
   const [toast, setToast] = useState<{message: string, type: 'info' | 'success' | 'warning'} | null>(null);
+
+  const CONTENT_MAP: Record<string, string> = {
+    // Broker Network
+    'Live Car Feed': 'Our neural engine aggregates luxury inventory from Vaughan, Oakville, and Markham in real-time. We provide direct access to off-market wholesale units before they hit public listings.',
+    'Auction Intel': 'Advanced pre-bid analysis for Manheim Toronto and ADESA Kitchener. We track historical gavel prices for high-end Porsche and Mercedes-Benz units to predict winning bids.',
+    'Dealer Solutions': 'Custom floor-planning and inventory optimization tools for boutique showrooms across Avenue Road and the Financial District. We help you move units 30% faster.',
+    'Developer API': 'Direct JSON data hooks for GTA dealership groups. Integrate our USMCA profit modeling directly into your proprietary CRM or inventory management systems.',
+    'Toronto Portal': 'The secure interface for Bay Street automotive brokers. Manage your cross-border trade portfolio with institutional-grade encryption and real-time FX hedging.',
+    
+    // Trade Rules
+    'OMVIC Registry': 'Automated compliance tracking with the Ontario Motor Vehicle Industry Council. Ensure every trade meets the latest standards for disclosure and dealer licensing.',
+    'CUSMA Clearance': 'Streamlined duty-free export processing for North American built luxury vehicles. We verify USMCA Rule 4.1 eligibility for every VIN in the corridor.',
+    'Audit Logs': 'Digital ledger documenting every VIN scan, profit calculation, and export manifest. Provides a complete audit trail for CBSA and IRS tax compliance.',
+    'VIN History': 'Deep-dive Ontario-specific history. We track local winter exposure, high-speed 407 ETR travel patterns, and documented heated storage records for premium valuation.',
+    'Export Permits': 'Instant generation of electronic CBP Form 7501 and CBSA export manifests. Our system minimizes border friction for high-value vehicle shipments.',
+
+    // Help Desk
+    'Help Center': 'Our 24/7 technical support desk specializing in cross-border trade friction. Whether it is a VIN mismatch at the border or an FX API lag, we are online.',
+    'Priority Support': 'Direct access to senior trade consultants in our Vaughan hub. Get immediate guidance on large-scale dealer-to-dealer fleet exports.',
+
+    // Locations
+    'Vaughan Hub': 'Our 50,000 sq. ft. high-security vehicle consolidation facility near the 407. Featuring climate-controlled staging and specialized exotic transport bays.',
+    'Toronto HQ': 'Strategic regulatory and compliance headquarters in the Financial District. We maintain direct liaison channels with major financial institutions for bulk trade clearing.',
+
+    // Legal
+    'Privacy Policy': 'Exotic Intel (EI) uses high-level encryption for all your data. This includes dealer licenses and private car history. Our Toronto data centers keep your information safe and local. We delete transaction data every 24 hours to keep your trades secret.',
+    'Terms of Service': 'This platform is for active luxury car brokers in the Toronto area only. By using our real-time feed, you agree to keep our profit calculations private. We may remove access for any unauthorized use of our data.',
+    'Sitemap': 'Quick access to all EI points: Vaughan Hub, Toronto Desk, Border Portals, and Miami Market updates. Includes full access to all data logs and manuals.',
+    'Data Security': 'Our Vaughan hub is protected by biometric locks. Every profit signal we send is verified to prevent fake market data. We guarantee 100% uptime for brokers watching fast-moving exchange rates.',
+    'Cookie Policy': 'We only use cookies to keep your account secure. We save your search preferences locally on your device. We never share your data with advertisers.'
+  };
 
   const allCars = useMemo(() => {
     const mockIds = new Set(liveCars.map(c => c.id));
@@ -115,6 +146,11 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleShowInfo = (title: string) => {
+    const content = CONTENT_MAP[title] || "Information buffer loading...";
+    setInfoModal({ title, content });
+  };
+
   const renderView = () => {
     switch (currentView) {
       case 'LOGISTICS':
@@ -182,7 +218,7 @@ const App: React.FC = () => {
                 { title: 'Detroit Bridge Hub', status: '12m Delay', capacity: 'Normal', desc: 'Customs clearing station for heavy truck transit.', icon: Truck, color: 'text-blue-400' },
                 { title: 'Port of Miami Node', status: 'Receiving', capacity: 'High Load', desc: 'Primary secondary market distribution terminal.', icon: Ship, color: 'text-emerald-400' },
               ].map((h, i) => (
-                <div key={i} className="glass-card p-10 rounded-[3rem] hover:border-amber-400/30 transition-all group cursor-pointer" onClick={() => showToast(`Opening ${h.title} Command Console...`)}>
+                <div key={i} className="glass-card p-10 rounded-[3rem] hover:border-amber-400/30 transition-all group cursor-pointer" onClick={() => handleShowInfo(h.title.includes('Vaughan') ? 'Vaughan Hub' : h.title)}>
                   <div className={`w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center ${h.color} mb-8 transition-transform group-hover:scale-110`}>
                     <h.icon size={32} />
                   </div>
@@ -221,7 +257,7 @@ const App: React.FC = () => {
                     { label: 'Ontario UVIP Data Verification', status: 'Nominal', date: '2025-05-15' },
                     { label: 'EPA/DOT Standards Validation', status: 'Active', date: '2025-05-15' }
                   ].map((c, i) => (
-                    <div key={i} className="flex justify-between items-center p-6 bg-slate-900/60 rounded-[2rem] border border-white/5 hover:border-white/20 transition-all cursor-pointer group" onClick={() => showToast(`Audit: ${c.label} status re-confirmed.`)}>
+                    <div key={i} className="flex justify-between items-center p-6 bg-slate-900/60 rounded-[2rem] border border-white/5 hover:border-white/20 transition-all cursor-pointer group" onClick={() => handleShowInfo(c.label.includes('OMVIC') ? 'OMVIC Registry' : (c.label.includes('CBP') ? 'CUSMA Clearance' : 'Audit Logs'))}>
                       <div className="flex items-center gap-6">
                         <CheckCircle2 className="text-emerald-500 group-hover:scale-110 transition-transform" size={24} />
                         <div>
@@ -236,7 +272,6 @@ const App: React.FC = () => {
               </div>
               
               <div className="flex flex-col gap-8">
-                {/* Redesigned Risk Monitoring Section */}
                 <div className="glass-card p-10 rounded-[3rem] border-white/10 shadow-2xl relative overflow-hidden bg-slate-900/60">
                   <div className="absolute top-0 right-0 p-4 opacity-10">
                     <Shield size={120} className="text-white" />
@@ -260,7 +295,6 @@ const App: React.FC = () => {
                         <span className="text-emerald-400 text-[10px] font-black uppercase tracking-widest">Low</span>
                       </div>
                       
-                      {/* Segmented meter visualization */}
                       <div className="flex gap-1.5 h-3">
                         {[...Array(10)].map((_, i) => (
                           <div 
@@ -283,7 +317,6 @@ const App: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Redesigned Download Button - Executive Style */}
                 <button 
                   onClick={handleDownloadPack} 
                   disabled={isDownloadingPack} 
@@ -383,7 +416,6 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-[#0f172a] selection:bg-amber-400 selection:text-black flex flex-col transition-colors duration-500">
       <MoneyTicker totalProfit={totalMarketProfit} exchangeRate={exchangeRate} location={userHub} />
 
-      {/* Neural Toast Hub */}
       {toast && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[500] animate-in slide-in-from-top-4 duration-300">
           <div className={`px-8 py-4 rounded-2xl flex items-center gap-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border ${
@@ -464,7 +496,7 @@ const App: React.FC = () => {
       </main>
 
       <Footer 
-        onShowLegal={(title, content) => setLegalModal({title, content})}
+        onShowContent={handleShowInfo}
         onContactSupport={() => showToast('Initializing priority link to Toronto Desk...', 'info')}
       />
 
@@ -477,23 +509,23 @@ const App: React.FC = () => {
         </button>
       </div>
 
-      {legalModal && (
-        <div className="fixed inset-0 z-[500] flex items-center justify-center p-8 bg-black/98 backdrop-blur-2xl">
+      {infoModal && (
+        <div className="fixed inset-0 z-[500] flex items-center justify-center p-8 bg-black/98 backdrop-blur-2xl" onClick={(e) => { if (e.target === e.currentTarget) setInfoModal(null); }}>
           <div className="w-full max-w-xl glass-card rounded-[4rem] p-12 border border-white/20 shadow-2xl relative animate-in zoom-in-95 duration-300">
-            <button onClick={() => setLegalModal(null)} className="absolute top-8 right-8 text-gray-500 hover:text-white p-2 transition-colors">
+            <button onClick={() => setInfoModal(null)} className="absolute top-8 right-8 text-gray-500 hover:text-white p-2 transition-colors">
               <X size={28} />
             </button>
             <div className="flex items-center gap-6 mb-10">
               <div className="w-16 h-16 rounded-[1.5rem] bg-amber-400/10 flex items-center justify-center border border-amber-400/20">
-                <ShieldAlert size={32} className="text-amber-400" />
+                {infoModal.title.includes('Policy') || infoModal.title.includes('Security') ? <Lock size={32} className="text-amber-400" /> : <Info size={32} className="text-amber-400" />}
               </div>
-              <h2 className="text-white text-3xl font-black uppercase tracking-tighter">{legalModal.title}</h2>
+              <h2 className="text-white text-3xl font-black uppercase tracking-tighter">{infoModal.title}</h2>
             </div>
-            <p className="text-gray-300 text-lg leading-relaxed font-medium mb-12">{legalModal.content}</p>
+            <p className="text-gray-300 text-lg leading-relaxed font-medium mb-12">{infoModal.content}</p>
             <button 
               onClick={() => {
-                setLegalModal(null);
-                showToast("Legal protocols acknowledged.", "success");
+                setInfoModal(null);
+                showToast("System buffer acknowledged.", "success");
               }}
               className="w-full bg-white text-black font-black uppercase tracking-[0.3em] py-5 rounded-[2rem] hover:bg-amber-400 transition-all active:scale-95 shadow-2xl text-xs"
             >
