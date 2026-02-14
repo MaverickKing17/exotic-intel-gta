@@ -18,14 +18,19 @@ export const fetchPorscheInventory = async (): Promise<Car[]> => {
       .select('id, make, model, year, price_cad, vin, image_url, demand_score, expected_us_resale')
       .eq('make', 'Porsche')
       .order('created_at', { ascending: false })
-      .limit(10); // Expanded limit for deeper market analysis
+      .limit(10);
 
     if (error) throw error;
 
-    // Map Supabase schema to our elite Car interface with explicit VIN translation
+    // Map Supabase schema to our elite Car interface with explicit VIN translation and USMCA derivation
     return (data || []).map((item: any) => {
-      const vinValue = item.vin || '';
+      // Normalize VIN: Trim and ensure uppercase for standard formatting
+      const vinValue = (item.vin || '').trim().toUpperCase();
       
+      // USMCA Intelligence: VINs starting with 1, 2, 3, 4, or 5 indicate North American assembly
+      // (1, 4, 5 = USA; 2 = Canada; 3 = Mexico). Essential for duty-free filtering.
+      const isNorthAmerican = /^[1-5]/.test(vinValue);
+
       return {
         id: item.id.toString(),
         make: item.make,
@@ -33,15 +38,13 @@ export const fetchPorscheInventory = async (): Promise<Car[]> => {
         year: item.year || 2024,
         cadPrice: item.price_cad || 0,
         vin: vinValue,
-        // USMCA Intelligence: VINs starting with 1, 2, 3, 4, or 5 indicate North American assembly
-        // (1, 4, 5 = USA; 2 = Canada; 3 = Mexico)
-        isNorthAmerican: /^[1-5]/.test(vinValue),
-        usPartPercentage: 0.85, 
+        isNorthAmerican: isNorthAmerican,
+        usPartPercentage: isNorthAmerican ? 0.85 : 0.05, // Estimated part value based on origin
         image: item.image_url || 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=1200',
         speedToSale: item.demand_score || 10,
         historyId: `SUPA-${item.id}`,
         expectedUsResale: item.expected_us_resale || 0,
-        isLive: true // UI distinction for real-time inventory
+        isLive: true // UI distinction for real-time inventory from the node
       };
     });
   } catch (error) {
