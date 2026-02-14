@@ -25,36 +25,36 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
     { 
       Icon: Instagram, 
       color: 'hover:text-[#E4405F]', 
-      glow: 'hover:shadow-[0_0_30px_rgba(228,64,95,0.7)] hover:border-[#E4405F]/60', 
+      glow: 'hover:shadow-[0_0_40px_rgba(228,64,95,0.8)] hover:border-[#E4405F]/80', 
       label: 'Instagram',
-      brand: 'rgba(228,64,95,0.1)'
+      brand: 'rgba(228,64,95,0.15)'
     },
     { 
       Icon: Twitter, 
       color: 'hover:text-[#1DA1F2]', 
-      glow: 'hover:shadow-[0_0_30px_rgba(29,161,242,0.7)] hover:border-[#1DA1F2]/60', 
+      glow: 'hover:shadow-[0_0_40px_rgba(29,161,242,0.8)] hover:border-[#1DA1F2]/80', 
       label: 'Twitter',
-      brand: 'rgba(29,161,242,0.1)'
+      brand: 'rgba(29,161,242,0.15)'
     },
     { 
       Icon: Linkedin, 
       color: 'hover:text-[#0077B5]', 
-      glow: 'hover:shadow-[0_0_30px_rgba(0,119,181,0.7)] hover:border-[#0077B5]/60', 
+      glow: 'hover:shadow-[0_0_40px_rgba(0,119,181,0.8)] hover:border-[#0077B5]/80', 
       label: 'LinkedIn',
-      brand: 'rgba(0,119,181,0.1)'
+      brand: 'rgba(0,119,181,0.15)'
     },
     { 
       Icon: Facebook, 
       color: 'hover:text-[#1877F2]', 
-      glow: 'hover:shadow-[0_0_30px_rgba(24,119,242,0.7)] hover:border-[#1877F2]/60', 
+      glow: 'hover:shadow-[0_0_40px_rgba(24,119,242,0.8)] hover:border-[#1877F2]/80', 
       label: 'Facebook',
-      brand: 'rgba(24,119,242,0.1)'
+      brand: 'rgba(24,119,242,0.15)'
     }
   ];
 
   return (
-    <footer className="w-full bg-[#05070a] border-t border-white/5 relative overflow-hidden">
-      {/* Top Border Glow */}
+    <footer className="w-full bg-[#0f172a] border-t border-white/5 relative overflow-hidden">
+      {/* Premium Gradient Top Border */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
       
       <div className="max-w-[1600px] mx-auto px-10 py-24">
@@ -62,29 +62,29 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
           {/* Brand & Realistic Socials */}
           <div className="lg:col-span-1 space-y-12">
             <div className="space-y-8">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(255,255,255,0.15)] transition-transform hover:scale-105 duration-500">
+              <div className="flex items-center gap-4 group cursor-pointer" onClick={onContactSupport}>
+                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(255,255,255,0.15)] transition-all group-hover:scale-110 duration-500">
                   <Gem size={32} className="text-black" />
                 </div>
-                <h1 className="text-white text-3xl font-black tracking-tighter uppercase">Exotic Intel</h1>
+                <h1 className="text-white text-3xl font-black tracking-tighter uppercase group-hover:text-amber-400 transition-colors">Exotic Intel</h1>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed font-medium">
-                The world's most powerful market engine for luxury car trading. We serve Toronto's elite brokers with real-time data and high-yield profit models.
+                The leading market engine for luxury car trading. We serve Toronto's top brokers with real-time data and profit models.
               </p>
             </div>
 
-            {/* Realistic & Vivid Social Media Icons */}
+            {/* Enhanced Social Icons with Vibrant Glow */}
             <div className="flex gap-5">
               {socialLinks.map(({ Icon, color, glow, label, brand }) => (
                 <button
                   key={label}
                   onClick={onContactSupport}
                   aria-label={label}
-                  className={`w-14 h-14 flex items-center justify-center rounded-[1.25rem] bg-white/[0.03] border border-white/[0.08] text-gray-200 transition-all duration-500 ${color} ${glow} hover:bg-black hover:scale-110 active:scale-95 group relative`}
+                  className={`w-14 h-14 flex items-center justify-center rounded-[1.25rem] bg-white/[0.05] border border-white/[0.12] text-gray-200 transition-all duration-500 ${color} ${glow} hover:bg-black/40 hover:scale-115 active:scale-90 group relative`}
                 >
-                  <Icon size={24} strokeWidth={2} className="relative z-10 transition-transform group-hover:scale-110" />
-                  {/* Subtle Inner Glow */}
-                  <div className={`absolute inset-0 rounded-[1.25rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500`} style={{ backgroundColor: brand }} />
+                  <Icon size={24} strokeWidth={2.5} className="relative z-10 transition-transform group-hover:scale-110 drop-shadow-sm" />
+                  {/* Vibrant Radial Inner Glow */}
+                  <div className={`absolute inset-0 rounded-[1.25rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500`} style={{ backgroundColor: brand, boxShadow: `inset 0 0 20px ${brand}` }} />
                 </button>
               ))}
             </div>
@@ -98,7 +98,7 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
             <ul className="space-y-5">
               {['Live Car Feed', 'Auction Intel', 'Dealer Solutions', 'Developer API', 'Toronto Portal'].map((link) => (
                 <li key={link}>
-                  <button onClick={onContactSupport} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest block text-left premium-hover hover:translate-x-1">{link}</button>
+                  <button onClick={onContactSupport} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest block text-left premium-hover hover:translate-x-2">{link}</button>
                 </li>
               ))}
             </ul>
@@ -111,7 +111,7 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
             <ul className="space-y-5">
               {['OMVIC Registry', 'CUSMA Clearance', 'Audit Logs', 'VIN History', 'Export Permits'].map((link) => (
                 <li key={link}>
-                  <button onClick={onContactSupport} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest block text-left premium-hover hover:translate-x-1">{link}</button>
+                  <button onClick={onContactSupport} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest block text-left premium-hover hover:translate-x-2">{link}</button>
                 </li>
               ))}
             </ul>
@@ -122,7 +122,7 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
               <LifeBuoy size={16} /> Help Desk
             </h4>
             <ul className="space-y-5">
-              <li><button onClick={onContactSupport} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest premium-hover hover:translate-x-1">Help Center</button></li>
+              <li><button onClick={onContactSupport} className="text-gray-100 hover:text-amber-400 transition-all text-xs font-black uppercase tracking-widest premium-hover hover:translate-x-2">Help Center</button></li>
               <li className="text-white text-sm font-black">+1 (416) 555-0198</li>
               <li className="text-white text-sm font-black">support@exoticintel.io</li>
               <li className="pt-4">
@@ -138,11 +138,11 @@ export const Footer: React.FC<FooterProps> = ({ onShowLegal, onContactSupport })
               <MapPin size={16} /> Hub Locations
             </h4>
             <div className="space-y-8">
-              <div className="group cursor-pointer premium-hover hover:translate-x-1" onClick={onContactSupport}>
+              <div className="group cursor-pointer premium-hover hover:translate-x-2" onClick={onContactSupport}>
                 <p className="text-white text-xs font-black uppercase tracking-widest group-hover:text-amber-400 transition-colors">Vaughan Hub</p>
                 <p className="text-gray-500 text-[11px] mt-2 leading-relaxed">Jane St Corridor, Vaughan<br/>Secure Logistics Node</p>
               </div>
-              <div className="group cursor-pointer premium-hover hover:translate-x-1" onClick={onContactSupport}>
+              <div className="group cursor-pointer premium-hover hover:translate-x-2" onClick={onContactSupport}>
                 <p className="text-white text-xs font-black uppercase tracking-widest group-hover:text-amber-400 transition-colors">Toronto HQ</p>
                 <p className="text-gray-500 text-[11px] mt-2 leading-relaxed">Bay St Financial District<br/>Compliance Center</p>
               </div>
