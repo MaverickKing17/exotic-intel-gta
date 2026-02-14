@@ -7,6 +7,7 @@ import { AssistantModal } from './components/AssistantModal';
 import { MarketPulse } from './components/MarketPulse';
 import { Footer } from './components/Footer';
 import { NegotiationAssistant } from './components/NegotiationAssistant';
+import { PredictiveModeler } from './components/PredictiveModeler';
 import { calculateProfit } from './utils';
 import { Car } from './types';
 import { fetchPorscheInventory } from './supabaseService';
@@ -310,19 +311,7 @@ const App: React.FC = () => {
               ))}
             </div>
 
-            <div className="glass-card p-20 rounded-[5rem] border-white/5 text-center flex flex-col items-center justify-center min-h-[500px] relative overflow-hidden group">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.05),transparent_70%)]" />
-              <div className="w-24 h-24 rounded-[2rem] bg-amber-400/10 flex items-center justify-center text-amber-400 mb-10 animate-pulse border border-amber-400/20 group-hover:scale-110 transition-transform">
-                <TrendingUp size={48} />
-              </div>
-              <h3 className="text-white text-4xl font-black uppercase tracking-tighter mb-6">Predictive Profit Modeler</h3>
-              <p className="text-gray-400 text-lg max-w-2xl leading-relaxed font-medium">
-                Analyzing real-time US listing velocity from MarketCheck vs Ontario-specific UVIP data. Our neural engine is optimizing the next 30-day arbitrage window for the Porsche 911 segment.
-              </p>
-              <div className="mt-12 flex gap-4">
-                {[0,1,2].map(i => <div key={i} className="w-3 h-3 rounded-full bg-amber-400 animate-bounce shadow-[0_0_15px_rgba(251,191,36,0.5)]" style={{animationDelay: `${i*0.2}s`}} />)}
-              </div>
-            </div>
+            <PredictiveModeler />
           </div>
         );
       default:
